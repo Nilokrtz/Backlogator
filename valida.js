@@ -1,40 +1,25 @@
-const usuarios = [
-    {
-        login: 'admin',
-        pass: 'admin'
-    },
-    {
-        login: 'user1',
-        pass: 'user1'
-    },
-    {
-        login: 'user2',
-        pass: 'user2'
-    }
-]
 
-let botao = document.getElementById('btnlogar')
+let botao = document.getElementById('btnlogar');
 
-botao.addEventListener('click', function logar(){
-    
-    let pegaUsuario = document.getElementById('usuario').value
-    let pegaSenha = document.getElementById('senha').value
-    let validaLogin = false
+botao.addEventListener('click', function logar(event){
+    event.preventDefault();
+    let pegaUsuario = document.getElementById('usuario').value;
+    let pegaSenha = document.getElementById('senha').value;
+    let validaLogin = false;
 
-    for(let i in usuarios){ 
-         if(pegaUsuario == usuarios[i].login && pegaSenha == usuarios[i].pass){
-                validaLogin = true
-            break
-        }
-
+    // Verifica admin fixo
+    if (pegaUsuario === 'admin' && pegaSenha === 'admin') {
+        window.location.href = 'homeadmin.html';
+        return;
     }
 
-    if (validaLogin == true && pegaUsuario == 'admin' && pegaSenha == 'admin'){
-        location.href ='homeadmin.html'
-    } else if (validaLogin == true){
-        location.href ='homeusuario.html'
-    } else {
-        alert('Usuário ou senha inválidos.')
+    // Verifica usuários cadastrados no localStorage
+    let usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
+    if (usuarios[pegaUsuario] && usuarios[pegaUsuario].senha === pegaSenha) {
+        window.location.href = 'homeusuario.html';
+        return;
     }
-})
+
+    alert('Usuário ou senha inválidos.');
+});
 
