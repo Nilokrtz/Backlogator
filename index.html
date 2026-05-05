@@ -1,43 +1,30 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-</head>
-<body>
-    <main class="container">
-        <form>
-            <h1>Bem-vindo de volta</h1>
-            <div class="input-box">
-                <input placeholder="Usuário" type="email" id="usuario">
-            </div>
-            <div class="input-box">
-                <input placeholder="Senha" type="password" id="senha">
-            </div>
-
-            <div class="remember-forgot">
-                <label>
-                    <input type="checkbox">
-                    Lembrar minha senha
-                </label>
-                <a href="#">Esqueci minha senha</a>
-            </div>
-
-            <button type="submit" class="login" id="btnlogar" onclick="">Conecte-se</button>
-            
-
-            <div class="register-link">
-                <p>Não tem uma conta? <a href="cadastro.html">Cadastre-se</a></p>
-            </div>
-        </form>
-
-
-    </main>
-<script src="valida.js"></script>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ionic App</title>
+    
+    <base href="/" />
+    
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="viewport"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    
+    <link rel="manifest" href="/manifest.json" />
+    
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    
+    <!-- add to homescreen for ios -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Ionic App" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
