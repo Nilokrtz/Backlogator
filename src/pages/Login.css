@@ -1,0 +1,43 @@
+ion-button[color="dark"] {
+    margin-top: 10px;
+    text-transform: initial;
+}
+
+ion-checkbox {
+    width: fit-content;
+    margin-top: 10px;
+    align-self: center;
+} 
+
+ion-item {
+    --background: transparent;
+    margin-bottom: 16px;
+}
+
+.login-content {
+    --background: #457F5C;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    
+}
+
+.box {
+    width: 420px;
+    padding: 30px 40px;
+    color: #fff;
+}
+
+.remember-forgot {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; 
+}
+
+#btnlogar {
+    margin-top: 20px;
+}
