@@ -50,7 +50,7 @@ function RegisterPage() {
     setLoading(true);
     try {
       await register(email, password);
-      setAlertMessage('Conta criada com sucesso! Você será redirecionado para o login.');
+      setAlertMessage('Conta criada com sucesso! Por gentileza, verifique seu e-mail. KATCHAU!');
       setShowAlert(true);
       // Redirecionar para login após um breve delay
       setTimeout(() => {
