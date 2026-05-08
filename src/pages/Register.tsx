@@ -8,7 +8,6 @@ import {
     IonInput,
     IonItem,
     IonButton,
-    IonCheckbox,
     IonLoading,
     IonAlert
  } from '@ionic/react';
@@ -52,10 +51,6 @@ function RegisterPage() {
       await register(email, password);
       setAlertMessage('Conta criada com sucesso! Por gentileza, verifique seu e-mail. KATCHAU!');
       setShowAlert(true);
-      // Redirecionar para login após um breve delay
-      setTimeout(() => {
-        history.push('/login');
-      }, 2000);
     } catch (error: any) {
       let message = 'Erro ao criar conta.';
       if (error.code === 'auth/email-already-in-use') {
@@ -90,7 +85,7 @@ function RegisterPage() {
                           label="Data de Nascimento"
                           labelPlacement="floating"
                           value={birthDate}
-                          onIonChange={(e) => setBirthDate(e.detail.value!)}
+                          onIonInput={(e) => setBirthDate(e.detail.value!)}
                         ></IonInput>
                         </IonItem>
 
@@ -101,7 +96,7 @@ function RegisterPage() {
                           label="E-mail"
                           labelPlacement="floating"
                           value={email}
-                          onIonChange={(e) => setEmail(e.detail.value!)}
+                          onIonInput={(e) => setEmail(e.detail.value!)}
                         ></IonInput>
                         </IonItem>
 
@@ -112,7 +107,7 @@ function RegisterPage() {
                           label="Senha"
                           labelPlacement="floating"
                           value={password}
-                          onIonChange={(e) => setPassword(e.detail.value!)}
+                          onIonInput={(e) => setPassword(e.detail.value!)}
                         ></IonInput>
                         </IonItem>
 
@@ -123,33 +118,34 @@ function RegisterPage() {
                           label="Confirmar Senha"
                           labelPlacement="floating"
                           value={confirmPassword}
-                          onIonChange={(e) => setConfirmPassword(e.detail.value!)}
+                          onIonInput={(e) => setConfirmPassword(e.detail.value!)}
                         ></IonInput>
                         </IonItem>
-
-                        <div className="remember-forgot">
-                            <IonCheckbox id="lembrar">Lembrar minha senha</IonCheckbox>
-
-                            <IonButton id="esqueci" color="dark" fill="clear" size="small">Esqueci minha senha</IonButton>
-                        </div>
 
                         <IonButton id="btncadastrar" color="success" expand="block" onClick={handleRegister} disabled={loading}>
                           {loading ? 'Cadastrando...' : 'Cadastre-se'}
                         </IonButton>
-
-                        <IonLoading isOpen={loading} message="Criando conta..." />
-                        <IonAlert
-                          isOpen={showAlert}
-                          onDidDismiss={() => setShowAlert(false)}
-                          header="Aviso"
-                          message={alertMessage}
-                          buttons={['OK']}
-                        />
                     </IonCardContent>
                 </IonCard>
             </div>
         </div>
 
+        <IonLoading isOpen={loading} message="Criando conta..." />
+
+        <IonAlert
+        isOpen={showAlert}
+        onDidDismiss={() => {
+          setShowAlert(false);
+          if (alertMessage.includes('sucesso')) {
+            history.push('/login');
+            }
+          }
+        }
+        header="Aviso"
+        message={alertMessage}
+        buttons={['OK']}
+        />
+        
         </IonContent>
     </IonPage>
   );
