@@ -1,11 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Top 5 Melhores Jogos</title>
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-    
+    <header class="cabecalho"> 
+        <h1>Os 5 Melhores Jogos da História!</h1>
+        <p>Nesse site vamos abrenger todos os 5 melhores jogos já feitos. 
+        Navegue usando setas para prosseguir </p>
+    </header>
+
+    <section class="sessao-formulario">
+        <h2>Gostaríamos de saber a sua opnião!</h2>
+        <p>preencha os campos abaixo e nos conte o que achou.</p>
+        <form class="Formulario-Opniao">
+            <div class="grupo-input">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" placeholder="Digite seu nome completo">
+            </div>
+
+            <div class="grupo-input">
+                <label for="idade">Idade:</label>
+                <input type="number" id="idade" placeholder="Ex: 20">
+            </div>
+
+            <div class="grupo-input">
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" placeholder="Seu@email.com">
+            </div>
+
+                <div class="grupo-input">
+                <label for="genero">Qual seu tipo de jogo favorito?</label>
+                <input list="lista-tipos" id="genero" name="genero" placeholder="Escolha o seu favorito">
+                <datalist id="lista-tipos">
+                    <option value="Ação"></option>
+                    <option value="RPG"></option>
+                    <option value="Estratégia"></option>
+                    <option value="Simulação"></option>
+                    <option value="Esportes"></option>
+                    <option value="FPS"></option>
+                </datalist>
+            </div>
+
+            <div class="grupo-input">
+                <label for="sugestao">Sugestão ou Comentário:</label>
+                <textarea id="sugestao" rows="4" placeholder="Digite aqui sua opnião"></textarea>
+            </div>
+
+
+            <button type="submit" class="botao-enviar">Enviar respostas</button>
+        </form>
+    </section>
+
 </body>
 </html>

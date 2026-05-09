@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(51, 49, 49);
+    color: rgb(231, 231, 223);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cabecalho {
+    text-align: center;
+    max-width: 700px;
+    margin-bottom: 30px;
+} 
+
+.cabecalho h1 {
+    color: burlywood;
+}
+
+.sessao-formulario{
+    width: 100%;
+    max-width: 600px;
+    background-color: rgb(78, 76, 76);
+    padding: 35px;
+    border-radius: 90px;
+    margin-top: 30px;
+    box-shadow: 0 4px 10px rgba(222, 184, 135, 0.5);
+}
+
+.sessao-formulario h2{
+    text-align: center;
+    color: burlywood;
+    margin-top: 0;
+}
+
+.sessao-formulario p{
+    text-align: center;
+    margin-bottom: 17px;
+    font-size: 16px;
+}
+
+.grupo-input label {
+    font-size: 15px;
+}
+
+.grupo-input input[type="text"],
+.grupo-input input[type="email"],
+.grupo-input input[type="number"],
+.grupo-input input[list],
+.grupo-input textarea {
+    padding: 5px;
+    border-radius: 7px;
+    border: 1.5px solid #333331;
+    background-color: rgb(202, 200, 192);
+    font-size: 12px;
+}
