@@ -1,0 +1,25 @@
+ion-item {
+    --background: transparent;
+    margin-bottom: 16px;
+}
+
+.register-content {
+    --background: #457F5C;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.box {
+    width: 420px;
+    padding: 30px 40px;
+    color: #fff;
+}
+
+#btncadastrar {
+    margin-top: 20px;
+}
