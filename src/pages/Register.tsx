@@ -15,6 +15,8 @@ import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import './Register.css';
+import { ref, set } from 'firebase/database';
+import { realtimeDb } from '../firebase';
 
 function RegisterPage() {
   const history = useHistory();
@@ -48,7 +50,15 @@ function RegisterPage() {
 
     setLoading(true);
     try {
-      await register(email, password);
+      const user = await register(email, password);
+      const uid = user.uid
+      await set(ref(realtimeDb, `BancoDeDados/Cadastros/${user.uid}`), {
+        email: email,
+        dataNascimento: birthDate,
+        totalJogos: 0,
+        tempoTotal: 0,
+        dataCadastro: new Date().toISOString().split('T')[0]
+    })
       setAlertMessage('Conta criada com sucesso! Por gentileza, verifique seu e-mail. KATCHAU!');
       setShowAlert(true);
     } catch (error: any) {
