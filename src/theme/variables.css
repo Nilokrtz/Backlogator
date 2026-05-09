@@ -1,8 +1,2 @@
 /* For information on how to create your own theme, please refer to:
 http://ionicframework.com/docs/theming/ */
-
-@import url('https://fonts.googleapis.com/css2?family=Lora&family=Montserrat&display=swap');
-
-:root {
-  --ion-font-family: 'Montserrat', sans-serif;
-}
