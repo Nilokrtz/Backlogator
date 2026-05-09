@@ -1,7 +1,0 @@
-{
-  "name": "IES-Projeto-Dados",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react-vite"
-}
