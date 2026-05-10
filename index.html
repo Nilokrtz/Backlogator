@@ -9,12 +9,12 @@
 <body>
     <header class="cabecalho"> 
         <h1>Os 5 Melhores Jogos da História!</h1>
-        <p>Nesse site vamos abrenger todos os 5 melhores jogos já feitos. 
-        Navegue usando setas para prosseguir </p>
+        <p>Nesse site vamos abranger os 5 melhores jogos da história de acordo com a voz do público. Focando na era moderna, selecionamos as obras-primas mais aclamadas e amadas pelos jogadores ao redor do mundo.
+            Essas informações foram coletadas do consenso geral das maiores plataformas de votação aberta ao público e do impacto cultural deles na comunidade gamer moderna. </p>
     </header>
 
     <section class="sessao-formulario">
-        <h2>Gostaríamos de saber a sua opnião!</h2>
+        <h2>Gostaríamos de saber a sua opinião!</h2>
         <p>preencha os campos abaixo e nos conte o que achou.</p>
         <form class="Formulario-Opniao">
             <div class="grupo-input">
@@ -32,9 +32,19 @@
                 <input type="email" id="email" placeholder="Seu@email.com">
             </div>
 
+            <div class="grupo-input">
+                <label for="nome_jogo">Jogo favorito:</label>
+                <input type="text" id="nome_jogo" placeholder="Nome do seu jogo favorito">
+            </div>
+
+            <div class="grupo-input">
+                <label for="plataforma">Sua plataforma principal:</label>
+                <input type="text" id="plataforma" placeholder="Ex: PC, PS5, Xbox...">
+            </div>
+
                 <div class="grupo-input">
                 <label for="genero">Qual seu tipo de jogo favorito?</label>
-                <input list="lista-tipos" id="genero" name="genero" placeholder="Escolha o seu favorito">
+                <input list="lista-tipos" id="genero" name="genero" placeholder="Escolha o seu tipo favorito">
                 <datalist id="lista-tipos">
                     <option value="Ação"></option>
                     <option value="RPG"></option>
@@ -45,13 +55,13 @@
                 </datalist>
             </div>
 
-            <div class="grupo-input">
+            <div class="grupo-input linha-completa">
                 <label for="sugestao">Sugestão ou Comentário:</label>
                 <textarea id="sugestao" rows="4" placeholder="Digite aqui sua opnião"></textarea>
             </div>
 
 
-            <button type="submit" class="botao-enviar">Enviar respostas</button>
+            <button type="submit" class="botao-enviar linha-completa">Enviar respostas</button>
         </form>
     </section>
 

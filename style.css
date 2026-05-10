@@ -45,14 +45,46 @@ body {
     font-size: 15px;
 }
 
+.Formulario-Opniao{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
 .grupo-input input[type="text"],
 .grupo-input input[type="email"],
 .grupo-input input[type="number"],
 .grupo-input input[list],
 .grupo-input textarea {
-    padding: 5px;
+    padding: 10px;
     border-radius: 7px;
     border: 1.5px solid #333331;
     background-color: rgb(202, 200, 192);
     font-size: 12px;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.botao-enviar{
+    width: 50%;
+    margin: 0 auto;
+    display: block;
+    padding: 13px;
+    background-color: rgb(216, 196, 169);
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    
+}
+
+.botao-enviar:hover{
+    background-color: burlywood;
+}
+
+.linha-completa{
+    grid-column: 1 / -1;
 }
