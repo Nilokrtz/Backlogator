@@ -146,7 +146,7 @@ function RegisterPage() {
                         fill="clear"
                         expand="block"
                         onClick={irParaLogin}>
-                          Voltar
+                          Login
                         </IonButton>
                     </IonCardContent>
                 </IonCard>
