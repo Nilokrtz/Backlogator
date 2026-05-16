@@ -16,6 +16,8 @@ import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import './Login.css';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { useRef } from 'react';
 
 function LoginPage() {
   const history = useHistory();
@@ -25,6 +27,8 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [captchaValido, setCaptchaValido] = useState(false);
 
   const irParaCadastro = () => {
     history.push('/register');
@@ -33,6 +37,12 @@ function LoginPage() {
   const handleLogin = async () => {
     if (!email || !password) {
       setAlertMessage('Por favor, preencha todos os campos.');
+      setShowAlert(true);
+
+      return;
+    }
+    if (!captchaValido) {
+      setAlertMessage('Por favor, confirme que você não é um robô.');
       setShowAlert(true);
       return;
     }
@@ -89,6 +99,15 @@ function LoginPage() {
                           onIonChange={(e) => setPassword(e.detail.value!)}
                         ></IonInput>
                         </IonItem>
+                        
+                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                        <ReCAPTCHA
+                          ref={recaptchaRef}
+                          sitekey={import.meta.env.VITE_RECAPTCHA_KEY}
+                          onChange={(token) => setCaptchaValido(!!token)}
+                          onExpired={() => setCaptchaValido(false)}                          
+                         />
+                      </div>
 
                         <div className="remember-forgot">
                             <IonCheckbox id="lembrar">Lembrar minha senha</IonCheckbox>

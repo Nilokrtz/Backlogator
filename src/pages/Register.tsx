@@ -17,6 +17,8 @@ import { useAuth } from '../contexts/AuthContext';
 import './Register.css';
 import { ref, set } from 'firebase/database';
 import { realtimeDb } from '../firebase';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { useRef } from 'react';
 
 function RegisterPage() {
   const history = useHistory();
@@ -28,6 +30,8 @@ function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [captchaValido, setCaptchaValido] = useState(false);
 
   const irParaLogin = () => {
     history.push('/login');
@@ -36,6 +40,12 @@ function RegisterPage() {
   const handleRegister = async () => {
     if (!email || !password || !confirmPassword || !birthDate) {
       setAlertMessage('Por favor, preencha todos os campos.');
+      setShowAlert(true);
+      return;
+    }
+
+    if (!captchaValido) {
+      setAlertMessage('Por favor, confirme que você não é um robô.');
       setShowAlert(true);
       return;
     }
@@ -55,8 +65,8 @@ function RegisterPage() {
     setLoading(true);
     try {
       const user = await register(email, password);
-      const uid = user.uid
-      await set(ref(realtimeDb, `BancoDeDados/Cadastros/${user.uid}`), {
+      const emailKey = email.replace(/\./g, '_').replace('@', '_')
+      await set(ref(realtimeDb, `BancoDeDados/Cadastros/${emailKey}`), {
         email: email,
         dataNascimento: birthDate,
         totalJogos: 0,
@@ -135,6 +145,15 @@ function RegisterPage() {
                           onIonInput={(e) => setConfirmPassword(e.detail.value!)}
                         ></IonInput>
                         </IonItem>
+
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                        <ReCAPTCHA
+                          ref={recaptchaRef}
+                          sitekey={import.meta.env.VITE_RECAPTCHA_KEY}
+                          onChange={(token) => setCaptchaValido(!!token)}
+                          onExpired={() => setCaptchaValido(false)}                          
+                         />
+                      </div>
 
                         <IonButton id="btncadastrar" color="success" expand="block" onClick={handleRegister} disabled={loading}>
                           {loading ? 'Cadastrando...' : 'Cadastre-se'}
