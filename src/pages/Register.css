@@ -11,7 +11,7 @@ ion-item {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
 }
 
 .box {
@@ -22,4 +22,8 @@ ion-item {
 
 #btncadastrar {
     margin-top: 20px;
+}
+
+#btnlogin {
+    margin-top: 16px;
 }

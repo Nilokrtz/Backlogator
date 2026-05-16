@@ -64,7 +64,7 @@ function LoginPage() {
             <div className="box">
                     <IonCard>
                     <IonCardHeader>
-                        <IonCardTitle color="success">Backlogator</IonCardTitle>
+                      <IonCardTitle color="success">Backlogator</IonCardTitle>
                     </IonCardHeader>
 
                     <IonCardContent>
@@ -72,7 +72,7 @@ function LoginPage() {
                         <IonInput
                           id="usuario"
                           type="email"
-                          label="Usuário"
+                          label="E-mail"
                           labelPlacement="floating"
                           value={email}
                           onIonChange={(e) => setEmail(e.detail.value!)}
@@ -102,18 +102,22 @@ function LoginPage() {
 
                         <IonButton id="btncadastrar" color="success" fill="clear" expand="block" onClick={irParaCadastro}>Cadastre-se</IonButton>
 
-                        <IonLoading isOpen={loading} message="Fazendo login..." />
-                        <IonAlert
-                          isOpen={showAlert}
-                          onDidDismiss={() => setShowAlert(false)}
-                          header="Erro"
-                          message={alertMessage}
-                          buttons={['OK']}
-                        />
                     </IonCardContent>
+
                 </IonCard>
+
             </div>
+
         </div>
+
+        <IonLoading isOpen={loading} message="Fazendo login..." />
+          <IonAlert
+            isOpen={showAlert}
+            onDidDismiss={() => setShowAlert(false)}
+            header="Erro"
+            message={alertMessage}
+            buttons={['OK']}
+          />
 
         </IonContent>
     </IonPage>

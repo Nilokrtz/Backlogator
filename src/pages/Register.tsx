@@ -29,6 +29,10 @@ function RegisterPage() {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
+  const irParaLogin = () => {
+    history.push('/login');
+  };
+
   const handleRegister = async () => {
     if (!email || !password || !confirmPassword || !birthDate) {
       setAlertMessage('Por favor, preencha todos os campos.');
@@ -134,6 +138,15 @@ function RegisterPage() {
 
                         <IonButton id="btncadastrar" color="success" expand="block" onClick={handleRegister} disabled={loading}>
                           {loading ? 'Cadastrando...' : 'Cadastre-se'}
+                        </IonButton>
+
+                        <IonButton
+                        id="btnlogin"
+                        color="success"
+                        fill="clear"
+                        expand="block"
+                        onClick={irParaLogin}>
+                          Voltar
                         </IonButton>
                     </IonCardContent>
                 </IonCard>

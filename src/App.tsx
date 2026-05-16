@@ -16,6 +16,7 @@ import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Home from './pages/Home';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -59,7 +60,11 @@ const App: React.FC = () => (
         <IonRouterOutlet>
 
           <Route exact path="/">
-            <Redirect to="/login" />
+            <Redirect to="/home" />
+          </Route>
+
+          <Route exact path="/home">
+            <Home />
           </Route>
 
           <Route exact path="/login">
