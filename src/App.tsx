@@ -17,6 +17,7 @@ import Tab3 from './pages/Tab3';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
+import ResetPassword from './pages/ResetPassword';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -69,6 +70,10 @@ const App: React.FC = () => (
 
           <Route exact path="/login">
             <Login />
+          </Route>
+
+          <Route exact path="/reset-password">
+            <ResetPassword />
           </Route>
 
           <Route exact path="/register">

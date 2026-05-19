@@ -110,9 +110,9 @@ function LoginPage() {
                       </div>
 
                         <div className="remember-forgot">
-                            <IonCheckbox id="lembrar">Lembrar minha senha</IonCheckbox>
+                          <IonCheckbox id="lembrar">Lembrar minha senha</IonCheckbox>
 
-                            <IonButton id="esqueci" color="dark" fill="clear" size="small">Esqueci minha senha</IonButton>
+                          <IonButton id="esqueci" color="dark" fill="clear" size="small" onClick={() => history.push('/reset-password')}>Esqueci minha senha</IonButton>
                         </div>
 
                         <IonButton id="btnlogar" color="success" expand="block" onClick={handleLogin} disabled={loading}>
