@@ -39,7 +39,7 @@ function HomePage() {
 
                   <IonAvatar 
                   className="logo-backlogator">
-                  <img alt="Logo do Backlogator" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                  <img alt="Logo do Backlogator" src="resources/logo-backlogator.png" />
                   </IonAvatar>
                   
                   <IonCardTitle
