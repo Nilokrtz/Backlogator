@@ -1,0 +1,132 @@
+.title-container{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.logout-button{
+  margin-right:8px;
+}
+
+.profile-header{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:30px;
+}
+
+.avatar{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+}
+
+.stats{
+  display:flex;
+  justify-content:space-around;
+  width:100%;
+  margin-top:20px;
+  text-align:center;
+}
+
+.stats div{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+
+.swiper{
+  padding-left:16px;
+  padding-right:16px;
+}
+
+.swiper img{
+  width:100%;
+  border-radius:12px;
+}
+
+.section-title{
+  margin-left:16px;
+  margin-top:24px;
+  margin-bottom:12px;
+}
+
+.section-title{
+  margin-left:16px;
+  margin-top:28px;
+  margin-bottom:16px;
+}
+
+.stats-container{
+  padding:0 16px;
+}
+
+.genre-item{
+  margin-bottom:18px;
+}
+
+.genre-info{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+
+.bar{
+  width:100%;
+  height:12px;
+
+  background:#2a2a2a;
+
+  border-radius:999px;
+
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+
+  background:#2dd36f;
+
+  border-radius:999px;
+}
+
+.year-stats{
+  padding:0 16px 30px;
+}
+
+.year-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  margin-bottom:16px;
+}
+
+.year-row span:first-child{
+  width:50px;
+}
+
+.year-row span:last-child{
+  width:30px;
+  text-align:right;
+}
+
+.year-bar{
+  flex:1;
+
+  height:10px;
+
+  background:#2a2a2a;
+
+  border-radius:999px;
+
+  overflow:hidden;
+}
+
+.year-fill{
+  height:100%;
+
+  background:#2dd36f;
+
+  border-radius:999px;
+}
