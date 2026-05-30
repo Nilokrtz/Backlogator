@@ -6,7 +6,7 @@ function assertKey() {
 
 function buildUrl(path: string, params: Record<string, string | number | boolean> = {}) {
   assertKey();
-  const url = new URL(`https://api.steampowered.com/${path}`);
+  const url = new URL(`https://corsproxy.io/?https://api.steampowered.com/${path}`);
   url.searchParams.set('key', API_KEY!);
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, String(v)));
   return url.toString();

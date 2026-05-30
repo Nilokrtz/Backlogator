@@ -15,7 +15,7 @@ import { useHistory } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import './Register.css';
-import { ref, set } from 'firebase/database';
+import { ref, set, get } from 'firebase/database';
 import { realtimeDb } from '../firebase';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useRef } from 'react';
@@ -23,6 +23,7 @@ import { useRef } from 'react';
 function RegisterPage() {
   const history = useHistory();
   const { register } = useAuth();
+  const [nomeUsuario, setUser] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -38,7 +39,7 @@ function RegisterPage() {
   };
 
   const handleRegister = async () => {
-    if (!email || !password || !confirmPassword || !birthDate) {
+    if (!nomeUsuario || !email || !password || !confirmPassword || !birthDate) {
       setAlertMessage('Por favor, preencha todos os campos.');
       setShowAlert(true);
       return;
@@ -62,11 +63,19 @@ function RegisterPage() {
       return;
     }
 
+    const snapshot = await get(ref(realtimeDb, `BancoDeDados/Cadastros/${nomeUsuario}`));
+if (snapshot.exists()) {
+    setAlertMessage('O nome de usuário já existe!');
+    setShowAlert(true);
+    return;
+}
+
     setLoading(true);
     try {
       const user = await register(email, password);
-      const emailKey = email.replace(/\./g, '_').replace('@', '_')
-      await set(ref(realtimeDb, `BancoDeDados/Cadastros/${emailKey}`), {
+      const userKey = nomeUsuario
+      await set(ref(realtimeDb, `BancoDeDados/Cadastros/${userKey}`), {
+        nomeUsuario: nomeUsuario,
         email: email,
         dataNascimento: birthDate,
         totalJogos: 0,
@@ -104,18 +113,18 @@ function RegisterPage() {
                     <IonCardContent>
                         <IonItem>
                         <IonInput
-                          id="dataNascimento"
-                          type="date"
-                          label="Data de Nascimento"
+                          id="usuario"
+                          type="text"
+                          label="Nome de Usuário"
                           labelPlacement="floating"
-                          value={birthDate}
-                          onIonInput={(e) => setBirthDate(e.detail.value!)}
+                          value={nomeUsuario}
+                          onIonInput={(e) => setUser(e.detail.value!)}
                         ></IonInput>
                         </IonItem>
 
                         <IonItem>
                         <IonInput
-                          id="usuario"
+                          id="emailUsuario"
                           type="email"
                           label="E-mail"
                           labelPlacement="floating"
@@ -143,6 +152,17 @@ function RegisterPage() {
                           labelPlacement="floating"
                           value={confirmPassword}
                           onIonInput={(e) => setConfirmPassword(e.detail.value!)}
+                        ></IonInput>
+                        </IonItem>
+
+                         <IonItem>
+                        <IonInput
+                          id="dataNascimento"
+                          type="date"
+                          label="Data de Nascimento"
+                          labelPlacement="floating"
+                          value={birthDate}
+                          onIonInput={(e) => setBirthDate(e.detail.value!)}
                         ></IonInput>
                         </IonItem>
 

@@ -41,7 +41,7 @@ const Tab1: React.FC = () => {
             </IonCardHeader>
             <IonCardContent>
               <p>Email: {user.email}</p>
-              <p>ID do usuário: {user.uid}</p>
+              <p>Nome do usuário: {user.uid}</p>
             </IonCardContent>
           </IonCard>
         )}
