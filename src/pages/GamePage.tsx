@@ -28,10 +28,10 @@ import { useHistory } from 'react-router-dom';
 
 import { useParams } from 'react-router-dom';
 
-const { appid } = useParams<{ appid: string }>();
-
 const GamePage: React.FC = () => {
   const history = useHistory();
+
+  const { appid } = useParams<{ appid: string }>();
 
   const game = {
     name: 'ELDEN RING',
