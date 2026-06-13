@@ -23,6 +23,7 @@ import Home from './pages/Home';
 import ResetPassword from './pages/ResetPassword';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
+import GamePage from './pages/GamePage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -81,6 +82,10 @@ const App: React.FC = () => (
 
           <Route exact path="/register">
             <Register />
+          </Route>
+
+          <Route exact path="/game/:appid">
+            <GamePage />
           </Route>
           
           <Route path="/tabs">

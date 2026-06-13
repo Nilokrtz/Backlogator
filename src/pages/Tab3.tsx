@@ -179,7 +179,10 @@ setJogos(jogosOrdenados)
               <h2 className="section-title">Biblioteca</h2>
               <Swiper spaceBetween={10} slidesPerView={2.2}>
                 {jogos.map((jogo) => (
-                  <SwiperSlide key={jogo.appid}>
+                  <SwiperSlide 
+                  key={jogo.appid}
+                  onClick={() => history.push(`/game/${jogo.appid}`)}
+                  >
                     <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`} />
                     <p style={{fontSize: '12px', textAlign: 'center'}}>{jogo.name}</p>
                     <p style={{fontSize: '11px', textAlign: 'center'}}>{Math.round(jogo.playtime_forever / 60)}h</p>
