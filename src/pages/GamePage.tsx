@@ -17,7 +17,6 @@ import {
 
 import { 
   arrowBack,
-  gameController 
 } from 'ionicons/icons';
 
 import 'swiper/css';
@@ -89,15 +88,6 @@ const GamePage: React.FC = () => {
             style={{ color: '#2dd36f' }}
             />
           </IonButton>
-
-          <IonTitle>
-
-            <div className="title-container">
-              <IonIcon icon={gameController} />
-              <span>Jogo</span>
-            </div>
-
-          </IonTitle>
 
         </IonToolbar>
 

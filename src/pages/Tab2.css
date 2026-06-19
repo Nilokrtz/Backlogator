@@ -1,0 +1,23 @@
+.title-container{
+  display:flex;
+  align-items:center;
+}
+
+.logout-button{
+  margin-right:8px;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.gallery-swiper{
+  padding-left:16px;
+  padding-right:16px;
+}
+
+.gallery-image{
+  width:100%;
+  border-radius:12px;
+  display:block;
+}

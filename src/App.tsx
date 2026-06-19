@@ -11,7 +11,7 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { 
-  ellipse, 
+  search, 
   person, 
   triangle } from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
@@ -109,8 +109,8 @@ const App: React.FC = () => (
                 </IonTabButton>
 
                 <IonTabButton tab="tab2" href="/tabs/tab2">
-                  <IonIcon icon={ellipse} />
-                  <IonLabel>Tab 2</IonLabel>
+                  <IonIcon icon={search} />
+                  <IonLabel>Pesquisa</IonLabel>
                 </IonTabButton>
 
                 <IonTabButton tab="tab3" href="/tabs/tab3">

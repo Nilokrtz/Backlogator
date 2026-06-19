@@ -4,15 +4,10 @@ import {
   IonPage, 
   IonTitle, 
   IonToolbar,
-  IonIcon,
   IonButton,
   IonItem,
   IonInput
 } from '@ionic/react';
-
-import { 
-  person 
-} from 'ionicons/icons';
 
 import { 
   Swiper, 
@@ -93,25 +88,21 @@ setJogos(jogosOrdenados)
 
         <IonToolbar>
 
-        <IonTitle>
-
           <div className="title-container">
 
-            <IonIcon icon={person}/>
+            <IonTitle>
+              <span>Perfil</span>
+            </IonTitle>
 
-            <span>Perfil</span>
+            <IonButton 
+            className="logout-button"
+            slot="end" 
+            color="success" 
+            onClick={handleLogout}>
+              Sair
+            </IonButton>    
 
-          </div>
-
-        </IonTitle>
-
-        <IonButton 
-        className="logout-button"
-        slot="end" 
-        color="success" 
-        onClick={handleLogout}>
-          Sair
-        </IonButton>          
+          </div>      
 
         </IonToolbar>
 
@@ -119,91 +110,84 @@ setJogos(jogosOrdenados)
 
       <IonContent fullscreen>
 
-        <IonHeader collapse="condense">
+        {!steamConectada ? (
+          <div>
+            <p>Conecte sua conta da Steam para ver sua biblioteca!</p>
+            <p style={{fontSize: '12px'}}>Cole o link do seu perfil Steam. Para encontrá-lo, acesse steamcommunity.com, clique no seu nome e copie a URL.</p>
+            <IonItem>
+              <IonInput
+                label="Link do perfil Steam"
+                labelPlacement="floating"
+                value={linkSteam}
+                onIonInput={(e) => setLinkSteam(e.detail.value!)}
+              />
+            </IonItem>
+            <IonButton color="success" expand="block" onClick={conectarSteam}>
+              Conectar com a Steam
+            </IonButton>
+          </div>
+        ) : (
+          <div>
+            <div className="profile-header">
+              <img src={avatarSteam} className="avatar" />
+              <h1>{nomeSteam}</h1>
 
-          <IonToolbar>
+              {perfilPrivado && (
+                /** */
+                <p style={{
+                    textAlign: 'center',
+                    color: 'orange',
+                    fontSize: '12px',
+                    padding: '8px'
+                }}>
+                    Este perfil é privado. Algumas informações podem não estar disponíveis.
+                </p>
+            )}
 
-            <IonTitle size="large">Perfil</IonTitle>
 
-          </IonToolbar>
-
-        </IonHeader>
-
-        <IonContent>
-
-         {!steamConectada ? (
-            <div>
-              <p>Conecte sua conta da Steam para ver sua biblioteca!</p>
-              <p style={{fontSize: '12px'}}>Cole o link do seu perfil Steam. Para encontrá-lo, acesse steamcommunity.com, clique no seu nome e copie a URL.</p>
-              <IonItem>
-                <IonInput
-                  label="Link do perfil Steam"
-                  labelPlacement="floating"
-                  value={linkSteam}
-                  onIonInput={(e) => setLinkSteam(e.detail.value!)}
-                />
-              </IonItem>
-              <IonButton color="success" expand="block" onClick={conectarSteam}>
-                Conectar com a Steam
-              </IonButton>
-            </div>
-          ) : (
-            <div>
-              <div className="profile-header">
-                <img src={avatarSteam} className="avatar" />
-                <h1>{nomeSteam}</h1>
-
-                {perfilPrivado && (
-    <p style={{
-        textAlign: 'center',
-        color: 'orange',
-        fontSize: '12px',
-        padding: '8px'
-    }}>
-        Este perfil é privado. Algumas informações podem não estar disponíveis.
-    </p>
-)}
-
-                <div className="stats">
-                  <div>
-                    <strong>{jogos.length}</strong>{" "}
-                    <span>Jogos</span>
-                  </div>
-                  <div>
-                    <strong>{Math.round(jogos.reduce((total, j) => total + j.playtime_forever, 0) / 60)}</strong>{" "}
-                    <span>Horas</span>
-                  </div>
-                </div>
+            <div className="stats">
+              <div>
+                <strong>{jogos.length}</strong>{" "}
+                <span>Jogos</span>
               </div>
-
-              <h2 className="section-title">Biblioteca</h2>
-              <Swiper spaceBetween={10} slidesPerView={2.2}>
-                {jogos.map((jogo) => (
-                  <SwiperSlide 
-                  key={jogo.appid}
-                  onClick={() => history.push(`/game/${jogo.appid}`)}
-                  >
-                    <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`} />
-                    <p style={{fontSize: '12px', textAlign: 'center'}}>{jogo.name}</p>
-                    <p style={{fontSize: '11px', textAlign: 'center'}}>{Math.round(jogo.playtime_forever / 60)}h</p>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-          )}
-          {}
-          <h2 className="section-title">Gêneros Favoritos</h2>
-          <div className="stats-container">
-            <div className="genre-item">
-              <div className="genre-info"><span>RPG</span><span>45%</span></div>
-              <div className="bar"><div className="fill" style={{width:'45%'}}></div></div>
-            </div>
-            <div className="genre-item">
-              <div className="genre-info"><span>FPS</span><span>25%</span></div>
-              <div className="bar"><div className="fill" style={{width:'25%'}}></div></div>
+              <div>
+                <strong>{Math.round(jogos.reduce((total, j) => total + j.playtime_forever, 0) / 60)}</strong>{" "}
+                <span>Horas</span>
+              </div>
             </div>
           </div>
-        </IonContent>
+
+          <h2 className="section-title">Biblioteca</h2>
+          <Swiper spaceBetween={10} slidesPerView={2.2}>
+            {jogos.map((jogo) => (
+              <SwiperSlide 
+              key={jogo.appid}
+              onClick={() => history.push(`/game/${jogo.appid}`)}
+              >
+                <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`} />
+                <p style={{fontSize: '12px', textAlign: 'center'}}>{jogo.name}</p>
+                <p style={{fontSize: '11px', textAlign: 'center'}}>{Math.round(jogo.playtime_forever / 60)}h</p>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      )}
+      {}
+
+        {/*
+        <h2 className="section-title">Gêneros Favoritos</h2>
+        <div className="stats-container">
+          <div className="genre-item">
+            <div className="genre-info"><span>RPG</span><span>45%</span></div>
+            <div className="bar"><div className="fill" style={{width:'45%'}}></div></div>
+          </div>
+          <div className="genre-item">
+            <div className="genre-info"><span>FPS</span><span>25%</span></div>
+            <div className="bar"><div className="fill" style={{width:'25%'}}></div></div>
+          </div>
+        </div>
+        */}
+
       </IonContent>
     </IonPage>
   );
