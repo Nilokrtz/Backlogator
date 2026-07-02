@@ -24,6 +24,7 @@ import ResetPassword from './pages/ResetPassword';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import GamePage from './pages/GamePage';
+import ErrorPage from './pages/ErrorPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -86,6 +87,10 @@ const App: React.FC = () => (
 
           <Route exact path="/game/:appid">
             <GamePage />
+          </Route>
+
+          <Route exact path="/errorpage">
+            <ErrorPage />
           </Route>
           
           <Route path="/tabs">
