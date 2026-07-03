@@ -1,0 +1,129 @@
+.dark-content {
+  --background: #1a1a1a; 
+}
+
+.header-toolbar {
+  --background: #1a1a1a;
+  padding: 8px 16px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  width: 100%;
+  padding-top: 16px; 
+}
+
+.profile-section {
+  display: flex;
+  align-items: center; 
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #2dd36f; 
+}
+
+.welcome-text {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0; 
+  line-height: 1; 
+}
+
+.logout-icon {
+  font-size: 26px; 
+  color: #2dd36f;
+  opacity: 0.6;
+  cursor: pointer;
+  margin: 0;
+  display: flex; 
+}
+
+.logout-icon:hover, .logout-icon:active {
+  opacity: 1;
+}
+
+.shelf-container {
+  margin-top: 24px;
+}
+
+.shelf-title {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+  padding-left: 16px;
+  margin-bottom: 12px;
+}
+
+.highlight-title {
+  color: #2dd36f; 
+}
+
+.gallery-swiper {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.gallery-image {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.game-title {
+  color: #e0e0e0;
+  font-size: 14px;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.offer-card {
+  position: relative;
+}
+
+.discount-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.8); 
+  color: #2dd36f; 
+  border: 1px solid rgba(45, 211, 111, 0.3); 
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  z-index: 10;
+  backdrop-filter: blur(4px); 
+}
+
+.price-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.old-price {
+  color: #888;
+  text-decoration: line-through;
+  font-size: 12px;
+}
+
+.new-price {
+  color: #2dd36f;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.free-tag {
+  color: #888;
+  font-size: 12px;
+  margin-top: 0;
+}

@@ -13,7 +13,13 @@ import { IonReactRouter } from '@ionic/react-router';
 import { 
   search, 
   person, 
-  triangle } from 'ionicons/icons';
+  triangle, 
+  home,
+  gameController,
+  gameControllerOutline,
+  homeOutline,
+  personAddOutline,
+  gameControllerSharp} from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
@@ -104,8 +110,8 @@ const App: React.FC = () => (
 
               <IonTabBar slot="bottom">
                 <IonTabButton tab="tab1" href="/tabs/tab1">
-                  <IonIcon icon={triangle} />
-                  <IonLabel>Tab 1</IonLabel>
+                  <IonIcon icon={gameControllerOutline} />
+                  <IonLabel>Início</IonLabel>
                 </IonTabButton>
 
                 <IonTabButton tab="tab2" href="/tabs/tab2">
