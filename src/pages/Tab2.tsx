@@ -5,15 +5,11 @@ import {
   IonTitle, 
   IonToolbar,
   IonButton,
-  IonSearchbar
+  IonSearchbar,
+  IonGrid,
+  IonRow,
+  IonCol
 } from '@ionic/react';
-
-import { 
-  Swiper, 
-  SwiperSlide 
-} from 'swiper/react';
-
-import 'swiper/css';
 
 import { useAuth } from '../contexts/AuthContext';
 
@@ -121,26 +117,25 @@ const Tab2: React.FC = () => {
         onIonInput={(e) => handleSearch(e.detail.value ?? '')}
         ></IonSearchbar>
 
-        <Swiper 
-        slidesPerView={1.3}
-        spaceBetween={12}
-        className="gallery-swiper"
-        >
-          {jogos.map((jogo) => (
-            <SwiperSlide
-              key={jogo.appid}
-              onClick={() => history.push(`/game/${jogo.appid}`)}
-            >
-              <img
-                src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`}
-                alt={jogo.name}
-                className="gallery-image"
-              />
-
-              <p>{jogo.name}</p>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <IonGrid>
+          <IonRow>
+            {jogos.map((jogo) => (
+              <IonCol
+                size="12"
+                sizeMd="6"
+                key={jogo.appid}
+                onClick={() => history.push(`/game/${jogo.appid}`)}
+              >
+                <img
+                  src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`}
+                  alt={jogo.name}
+                  className="gallery-image"
+                />
+                <p>{jogo.name}</p>
+              </IonCol>
+            ))}
+          </IonRow>
+        </IonGrid>
 
       </IonContent>
     </IonPage>
