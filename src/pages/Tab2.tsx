@@ -8,16 +8,19 @@ import {
   IonSearchbar,
   IonGrid,
   IonRow,
-  IonCol
+  IonCol,
+  IonChip,
+  IonLabel
 } from '@ionic/react';
 
 import { useAuth } from '../contexts/AuthContext';
 
 import { useHistory } from 'react-router-dom';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import './Tab2.css';
+import { filterJogos } from './tab2Utils';
 
 const Tab2: React.FC = () => {
   const { logout } = useAuth();
@@ -35,50 +38,55 @@ const Tab2: React.FC = () => {
   const jogosMockup = [
   {
     appid: 730,
-    name: 'Counter-Strike 2'
+    name: 'Counter-Strike 2',
+    genres: ['Action', 'FPS']
   },
   {
     appid: 570,
-    name: 'Dota 2'
+    name: 'Dota 2',
+    genres: ['MOBA', 'Strategy']
   },
   {
     appid: 105600,
-    name: 'Terraria'
+    name: 'Terraria',
+    genres: ['Adventure', 'Indie']
   },
   {
     appid: 413150,
-    name: 'Stardew Valley'
+    name: 'Stardew Valley',
+    genres: ['Simulation', 'RPG']
   },
   {
     appid: 620,
-    name: 'Portal 2'
+    name: 'Portal 2',
+    genres: ['Puzzle', 'Action']
   },
   {
     appid: 440,
-    name: 'Team Fortress 2'
+    name: 'Team Fortress 2',
+    genres: ['Action', 'FPS']
   },
   {
     appid: 271590,
-    name: 'Grand Theft Auto V'
+    name: 'Grand Theft Auto V',
+    genres: ['Action', 'Adventure']
   },
   {
     appid: 1174180,
-    name: 'Red Dead Redemption 2'
+    name: 'Red Dead Redemption 2',
+    genres: ['Action', 'Adventure']
   }
 ];
 
   const [query, setQuery] = useState('');
-  const [jogos, setJogos] = useState(jogosMockup);
+  const [generoSelecionado, setGeneroSelecionado] = useState('Todos');
+  const generos = ['Todos', 'RPG', 'Action', 'FPS', 'Adventure'];
+
+  const jogosFiltrados = useMemo(() => filterJogos(jogosMockup, query, generoSelecionado), [query, generoSelecionado]);
 
   const handleSearch = (texto: string) => {
-  setQuery(texto);
-
-  const resultados = jogosMockup.filter((jogo) =>
-    jogo.name.toLowerCase().includes(texto.toLowerCase())
-  );
-
-  setJogos(resultados);
-};
+    setQuery(texto);
+  };
   
   return (
     <IonPage>
@@ -117,9 +125,21 @@ const Tab2: React.FC = () => {
         onIonInput={(e) => handleSearch(e.detail.value ?? '')}
         ></IonSearchbar>
 
+        <div className="genre-filter-row">
+          {generos.map((genero) => (
+            <IonChip
+              key={genero}
+              color={generoSelecionado === genero ? 'success' : 'medium'}
+              onClick={() => setGeneroSelecionado(genero)}
+            >
+              <IonLabel>{genero}</IonLabel>
+            </IonChip>
+          ))}
+        </div>
+
         <IonGrid>
           <IonRow>
-            {jogos.map((jogo) => (
+            {jogosFiltrados.map((jogo) => (
               <IonCol
                 size="12"
                 sizeMd="6"
