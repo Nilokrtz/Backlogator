@@ -33,6 +33,7 @@ function RegisterPage() {
   const [alertMessage, setAlertMessage] = useState('');
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [captchaValido, setCaptchaValido] = useState(false);
+  
 
   const irParaLogin = () => {
     history.push('/login');
@@ -70,6 +71,7 @@ if (snapshot.exists()) {
     return;
 }
 
+
     setLoading(true);
     try {
       const user = await register(email, password);
@@ -82,6 +84,10 @@ if (snapshot.exists()) {
         tempoTotal: 0,
         dataCadastro: new Date().toISOString().split('T')[0]
     })
+    await set(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`), {
+    nomeUsuario: nomeUsuario
+})
+    
       setAlertMessage('Conta criada com sucesso! Por gentileza, verifique seu e-mail. KATCHAU!');
       setShowAlert(true);
     } catch (error: any) {

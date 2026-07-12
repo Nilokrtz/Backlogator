@@ -25,52 +25,48 @@ import './GamePage.css';
 import { useHistory } from 'react-router-dom';
 
 import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
 
 const GamePage: React.FC = () => {
+
   const history = useHistory();
-
   const { appid } = useParams<{ appid: string }>();
+  const [nomeJogo, setNomeJogo] = useState('');
+  const [descricaoCurta, setDescricaoCurta] = useState('');
+  const [descricaoLonga, setDescricaoLonga] = useState('');
+  const [generos, setGeneros] =useState<any[]>([]);
+  const [imagemHeader, setImagemHeader] = useState('');
+  const [fotoScreenshot, setFotoScreenshot] = useState<any[]>([]);
+  const [categorias, setCategorias] = useState<any[]>([]);
+  const [conquistas, setConquistas] = useState('');
+  const [dataLancamento, setDataLancamento] = useState('');
+  const [desenvolvedores, setDesenvolvedores] = useState<any[]>([]);
+  const [publicadoras, setPublicadoras] = useState<any[]>([]);
 
-  const game = {
-    name: 'ELDEN RING',
 
-    releaseDate: '24 Feb, 2022',
+    useEffect(() => {
+    const buscarDados = async () => {
+        const response = await fetch(`https://corsproxy.io/?https://store.steampowered.com/api/appdetails?appids=${appid}&l=brazilian`)
+        const data = await response.json()
+        const gameData = data[appid].data
 
-    developers: [
-      'FromSoftware, Inc.'
-    ],
+        setNomeJogo(gameData.name)
+        setDescricaoCurta(gameData.short_description)
+        setDescricaoLonga(gameData.detailed_description)
+        setGeneros(gameData.genres)
+        setImagemHeader(gameData.header_image)
+        setFotoScreenshot(gameData.screenshots)
+        setCategorias(gameData.categories)
+        setConquistas(gameData.achievements?.total ?? '0')
+        setDataLancamento(gameData.release_date.date)
+        setDesenvolvedores(gameData.developers)
+        setPublicadoras(gameData.publishers)
 
-    publishers: [
-      'Bandai Namco Entertainment'
-    ],
-
-    genres: [
-      'Action',
-      'RPG'
-    ],
-
-    categories: [
-      'Single-player',
-      'Online PvP',
-      'Online Co-op'
-    ],
-
-    shortDescription:
-      'Rise, Tarnished, and become the Elden Lord.',
-
-    detailedDescription:
-      'The Golden Order has been broken. Explore the Lands Between, face powerful enemies and discover the secrets hidden throughout this vast open world.',
-
-    headerImage:
-      'https://cdn.akamai.steamstatic.com/steam/apps/1245620/header.jpg',
-
-    screenshots: [
-      'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_943bf6fe62352757d9070c1d33e50b92fe8539f1.1920x1080.jpg?t=1767883716',
-      'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_dcdac9e4b26ac0ee5248bfd2967d764fd00cdb42.1920x1080.jpg?t=1767883716',
-      'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_3c41384a24d86dddd58a8f61db77f9dc0bfda8b5.1920x1080.jpg?t=1767883716620/ss_3.jpg',
-      'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/ss_e0316c76f8197405c1312d072b84331dd735d60b.1920x1080.jpg?t=1767883716'
-    ]
-  };
+      }
+    buscarDados(
+      )
+}, [appid])
 
   return (
     <IonPage>
@@ -95,25 +91,30 @@ const GamePage: React.FC = () => {
       <IonContent fullscreen>
 
         <img
-          src={game.headerImage}
-          alt={game.name}
+          src={imagemHeader}
+          alt={nomeJogo}
           className="game-banner"
         />
 
         <div className="game-info">
 
-          <h1>{game.name}</h1>
+          <h1>{nomeJogo}</h1>
 
           <p className="game-release">
-            Lançamento: {game.releaseDate}
+            Lançamento: {dataLancamento}
           </p>
+
+          <div className="game-section">
+            <h3>Conquistas</h3>
+            <p>{conquistas} conquistas totais</p>
+          </div>
 
           <div className="game-section">
 
             <h3>Desenvolvedora</h3>
 
             <p>
-              {game.developers.join(', ')}
+              {desenvolvedores.join(', ')}
             </p>
 
           </div>
@@ -123,7 +124,7 @@ const GamePage: React.FC = () => {
             <h3>Publicadora</h3>
 
             <p>
-              {game.publishers.join(', ')}
+              {publicadoras.join(', ')}
             </p>
 
           </div>
@@ -134,9 +135,9 @@ const GamePage: React.FC = () => {
 
             <div className="chips-container">
 
-              {game.categories.map((category) => (
-                <IonChip key={category}>
-                  <IonLabel>{category}</IonLabel>
+              {categorias.map((cat) => (
+                <IonChip key={cat.id}>
+                  <IonLabel>{cat.description}</IonLabel>
                 </IonChip>
               ))}
 
@@ -150,9 +151,9 @@ const GamePage: React.FC = () => {
 
             <div className="chips-container">
 
-              {game.genres.map((genre) => (
-                <IonChip key={genre}>
-                  <IonLabel>{genre}</IonLabel>
+              {generos.map((gen) => (
+                <IonChip key={gen.id}>
+                  <IonLabel>{gen.description}</IonLabel>
                 </IonChip>
               ))}
 
@@ -172,12 +173,12 @@ const GamePage: React.FC = () => {
           className="gallery-swiper"
         >
 
-          {game.screenshots.map((image, index) => (
+          {fotoScreenshot.map((image, index) => (
 
             <SwiperSlide key={index}>
 
               <img
-                src={image}
+                src={image.path_full}
                 alt={`Screenshot ${index + 1}`}
                 className="gallery-image"
               />
@@ -188,19 +189,12 @@ const GamePage: React.FC = () => {
 
         </Swiper>
 
-        <div className="description-container">
+        <div 
+          className="short-description"
+          dangerouslySetInnerHTML={{ __html: descricaoCurta }}
+        />
 
-          <h2>Sobre o jogo</h2>
-
-          <p className="short-description">
-            {game.shortDescription}
-          </p>
-
-          <p>
-            {game.detailedDescription}
-          </p>
-
-        </div>
+        <div dangerouslySetInnerHTML={{ __html: descricaoLonga }} />
 
       </IonContent>
 

@@ -11,8 +11,10 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useAuth } from '../contexts/AuthContext';
 import { useHistory } from 'react-router-dom';
-import { useState } from 'react';
 import './Tab1.css';
+import { useEffect, useState } from 'react';
+import { get, ref } from 'firebase/database';
+import { realtimeDb } from '../firebase';
 
 const Tab1: React.FC = () => {
   const { user, logout } = useAuth();
@@ -51,6 +53,19 @@ const Tab1: React.FC = () => {
     { appid: 1172470, name: 'Apex Legends' },
   ]);
 
+  const [nomeUsuario, setNomeUsuario] = useState('');
+
+    useEffect(() => {
+    if (!user) return 
+    const buscarNome = async () => {
+        const snapshot = await get(ref(realtimeDb, `BancoDeDados/UIDs/${user!.uid}`))
+        if (snapshot.exists()) {
+            setNomeUsuario(snapshot.val().nomeUsuario)
+        }
+    }
+    buscarNome()
+}, [user])
+
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
@@ -61,9 +76,11 @@ const Tab1: React.FC = () => {
                 <img src="https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg" alt="Avatar" />
               </IonAvatar>
               
+          
+
               {}
               <span className="welcome-text">
-                Olá, {user?.email ? user.email.split('@')[0] : 'Jogador'}
+                Olá, {nomeUsuario || 'Jogador'}
               </span>
             </div>
             

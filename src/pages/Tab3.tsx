@@ -6,7 +6,8 @@ import {
   IonToolbar,
   IonButton,
   IonItem,
-  IonInput
+  IonInput,
+  IonModal
 } from '@ionic/react';
 
 import { 
@@ -35,6 +36,10 @@ const Tab3: React.FC = () => {
   const [nomeSteam, setNomeSteam] = useState('');
   const [jogos, setJogos] = useState<any[]>([]);
   const [perfilPrivado, setPerfilPrivado] = useState(false);
+  const [modalConquistas, setModalConquistas] = useState(false);
+  const [jogoAtual, setJogoAtual] = useState<any>(null);
+  const [listaConquistas, setListaConquistas] = useState<any[]>([]);
+  const [steamId, setSteamId] = useState('');
   
 
   const handleLogout = async () => {
@@ -59,9 +64,11 @@ const Tab3: React.FC = () => {
         const response = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&vanityurl=${id}`)
         const data = await response.json()
         steamIdFinal = data.response.steamid
+       
     }
+     setSteamId(steamIdFinal)
 
-const response = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamids=${steamIdFinal}`)
+    const response = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamids=${steamIdFinal}`)
     const data = await response.json()
     const perfil = data.response.players[0]
     console.log('visibilidade:', perfil.communityvisibilitystate)
@@ -79,6 +86,30 @@ const jogos = dataJogos.response.games
 const jogosOrdenados = jogos.sort((a: any, b: any) => b.playtime_forever - a.playtime_forever)
 setJogos(jogosOrdenados)
 
+}
+
+const abrirConquistas = async (jogo: any) => {
+    setJogoAtual(jogo)
+    
+    const responseUsuario = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${steamId}&appid=${jogo.appid}&l=brazilian`)
+    const dataUsuario = await responseUsuario.json()
+    const conquistasUsuario = dataUsuario.playerstats.achievements
+ 
+    const responseSchema = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&appid=${jogo.appid}&l=brazilian`)
+    const dataSchema = await responseSchema.json()
+    const schemaConquistas = dataSchema.game.availableGameStats.achievements
+
+    const conquistasCombinadas = conquistasUsuario.map((conquista: any) => {
+        const detalhes = schemaConquistas.find((s: any) => s.name === conquista.apiname)
+        return {
+            nome: detalhes?.displayName,
+            icone: conquista.achieved ? detalhes?.icon : detalhes?.icongray,
+            desbloqueada: conquista.achieved === 1
+        }
+    })
+
+    setListaConquistas(conquistasCombinadas)
+    setModalConquistas(true)
 }
   
   return (
@@ -162,7 +193,7 @@ setJogos(jogosOrdenados)
             {jogos.map((jogo) => (
               <SwiperSlide 
               key={jogo.appid}
-              onClick={() => history.push(`/game/${jogo.appid}`)}
+              onClick={() => abrirConquistas(jogo)}
               >
                 <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`} />
                 <p style={{fontSize: '12px', textAlign: 'center'}}>{jogo.name}</p>
@@ -175,19 +206,44 @@ setJogos(jogosOrdenados)
       {}
 
         {/*
-        <h2 className="section-title">Gêneros Favoritos</h2>
-        <div className="stats-container">
-          <div className="genre-item">
-            <div className="genre-info"><span>RPG</span><span>45%</span></div>
-            <div className="bar"><div className="fill" style={{width:'45%'}}></div></div>
-          </div>
-          <div className="genre-item">
-            <div className="genre-info"><span>FPS</span><span>25%</span></div>
-            <div className="bar"><div className="fill" style={{width:'25%'}}></div></div>
-          </div>
-        </div>
+       parte temporária para teste das conquistas
         */}
 
+      <IonModal isOpen={modalConquistas} onDidDismiss={() => setModalConquistas(false)}>
+  <IonHeader>
+    <IonToolbar>
+      <IonTitle>{jogoAtual?.name}</IonTitle>
+      <IonButton slot="end" fill="clear" onClick={() => setModalConquistas(false)}>
+        Fechar
+      </IonButton>
+      <IonButton slot="end" color="success" fill="clear" onClick={() => {
+        setModalConquistas(false)
+        history.push(`/game/${jogoAtual?.appid}`)
+      }}>
+        Ver jogo
+      </IonButton>
+    </IonToolbar>
+  </IonHeader>
+  <IonContent>
+    <h2 style={{padding: '16px'}}>Conquistas</h2>
+    {listaConquistas.map((conquista, index) => (
+      <div key={index} style={{display: 'flex', alignItems: 'center', padding: '8px 16px', gap: '12px'}}>
+        <img src={conquista.icone} style={{width: '48px', height: '48px'}} />
+        <p style={{
+          margin: 0,
+          color: conquista.desbloqueada ? 'white' : 'gray'
+        }}>
+          {conquista.nome}
+        </p>
+      </div>
+    ))}
+
+        {/*
+       parte temporária para teste das conquistas
+        */}
+
+      </IonContent>
+      </IonModal>
       </IonContent>
     </IonPage>
   );
