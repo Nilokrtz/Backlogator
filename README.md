@@ -93,6 +93,11 @@ Para carregar seus jogos e conquistas no app, acesse a tela de **Perfil (Tab 3)*
 2. **URL de ID Numérico:** ex: `https://steamcommunity.com/profiles/76561198000000000/`
 3. **SteamID Bruto:** O ID numérico de 17 dígitos direto (ex: `76561198000000000`).
 
+#### 🔍 Como pegar o link do seu perfil Steam:
+* **Pelo Navegador:** Acesse o site [steamcommunity.com](https://steamcommunity.com), clique no seu nome de usuário (no menu superior) e escolha **"Ver perfil"**. Copie toda a URL da barra de endereços.
+* **Pelo Aplicativo Desktop:** Abra a Steam, clique no seu nome de usuário na barra superior para ir para o seu **Perfil**. Clique com o botão direito em um espaço em branco da página e selecione **"Copiar URL da página"**.
+* **Pelo Aplicativo Mobile:** Acesse o seu perfil no app, clique no botão de opções/compartilhar e escolha **"Copiar link"**.
+
 #### ⚙️ Como a Conexão Funciona:
 * **Higienização do Link:** O aplicativo analisa a entrada, descarta barras extras de navegação e extrai o identificador final do perfil.
 * **Resolução Automática de URL (Vanity URL):** Caso o usuário insira o apelido personalizado, o backend faz uma chamada de API (`ResolveVanityURL`) para obter o SteamID numérico real correspondente.
