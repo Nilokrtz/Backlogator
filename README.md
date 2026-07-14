@@ -21,9 +21,9 @@
 
 ## 📖 Sobre o Projeto
 
-O **Backlogator** é um aplicativo mobile-first desenvolvido com **Ionic React** e **Capacitor**, projetado para jogadores que querem organizar seus backlogs de jogos, monitorar horas jogadas e compartilhar conquistas em um ambiente gamificado com amigos. 
+O **Backlogator** é um aplicativo mobile-first desenvolvido com **Ionic React** e **Capacitor** para o **IEEE (vulgo IES)** da nossa faculdade. O projeto foi projetado para jogadores que querem organizar seus backlogs de jogos, monitorar horas jogadas e compartilhar conquistas em um ambiente gamificado com amigos de forma simples e intuitiva.
 
-O app consome diretamente a **Steam Web API** para sincronizar bibliotecas de jogos em tempo real e utiliza o **Firebase** como infraestrutura de banco de dados e autenticação segura de usuários.
+O app consome a **Steam Web API** (via Firebase Cloud Functions) para sincronizar bibliotecas de jogos em tempo real e utiliza o **Firebase** como infraestrutura de banco de dados e autenticação segura de usuários.
 
 ---
 
@@ -84,33 +84,10 @@ npm install
 > `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
 > Ou opte por executar usando o sufixo `.cmd` (ex: `npm.cmd install`).
 
-### 3. Configurar Variáveis de Ambiente
-Crie um arquivo na raiz do projeto chamado `.env.local` e configure suas chaves do Firebase, Steam e reCAPTCHA. Você pode usar como base o arquivo `.env.example`:
+### 3. Conexão Automática e Simplificada
+Para rodar e testar o aplicativo localmente, **não é necessária nenhuma configuração manual complexa de chaves do Firebase ou chaves de API da Steam**. 
 
-```env
-# Configurações do Firebase - App de Autenticação
-VITE_APP_API_KEY_AUTH=SUA_CHAVE_AQUI
-VITE_APP_AUTH_DOMAIN_AUTH=seu-projeto.firebaseapp.com
-VITE_APP_PROJECT_ID_AUTH=seu-projeto
-VITE_APP_STORAGE_BUCKET_AUTH=seu-projeto.firebasestorage.app
-VITE_APP_MESSAGING_SENDER_ID_AUTH=SEU_ID
-VITE_APP_APP_ID_AUTH=SEU_APP_ID
-VITE_APP_MEASUREMENT_ID_AUTH=SEU_MEASUREMENT_ID
-
-# Configurações do Firebase - App do Banco de Dados
-VITE_APP_API_KEY_BANCO=SUA_CHAVE_AQUI
-VITE_APP_AUTH_DOMAIN_BANCO=seu-projeto-banco.firebaseapp.com
-VITE_APP_DATABASE_URL_BANCO=https://seu-projeto-banco-rtdb.firebaseio.com/
-VITE_APP_PROJECT_ID_BANCO=seu-projeto-banco
-VITE_APP_STORAGE_BUCKET_BANCO=seu-projeto-banco.firebasestorage.app
-VITE_APP_MESSAGING_SENDER_ID_BANCO=SEU_ID
-VITE_APP_APP_ID_BANCO=SEU_APP_ID
-VITE_APP_MEASUREMENT_ID_BANCO=SEU_MEASUREMENT_ID
-
-# Outras Chaves e APIs
-VITE_RECAPTCHA_KEY=SUA_CHAVE_SITE_RECAPTCHA
-VITE_STEAM_API_KEY=SUA_CHAVE_STEAM_API
-```
+O projeto já está integrado diretamente com o banco de dados do Firebase. Para carregar seus jogos e conquistas no app, basta inserir o **link direto do seu perfil público da Steam** (ou o seu SteamID) na tela de perfil e seus dados aparecerão instantaneamente!
 
 ### 4. Executar Servidor de Desenvolvimento
 Inicie o servidor local do Vite para testar no navegador:
@@ -161,5 +138,5 @@ Os comandos abaixo podem ser rodados com `npm run <script>`:
 ---
 
 <p align="center">
-  Desenvolvido com 💚 para a disciplina de Engenharia de Software.
+  Desenvolvido com 💚 para o **IEEE (vulgo IES)** de nossa faculdade.
 </p>
