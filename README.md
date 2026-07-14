@@ -84,10 +84,20 @@ npm install
 > `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`
 > Ou opte por executar usando o sufixo `.cmd` (ex: `npm.cmd install`).
 
-### 3. Conexão Automática e Simplificada
-Para rodar e testar o aplicativo localmente, **não é necessária nenhuma configuração manual complexa de chaves do Firebase ou chaves de API da Steam**. 
+### 3. Sincronização e Conexão com a Steam
+Para rodar e testar o aplicativo localmente, **não é necessária nenhuma configuração manual de chaves do Firebase ou chaves de API da Steam**. O projeto já está integrado diretamente com a nossa infraestrutura.
 
-O projeto já está integrado diretamente com o banco de dados do Firebase. Para carregar seus jogos e conquistas no app, basta inserir o **link direto do seu perfil público da Steam** (ou o seu SteamID) na tela de perfil e seus dados aparecerão instantaneamente!
+Para carregar seus jogos e conquistas no app, acesse a tela de **Perfil (Tab 3)** e insira os dados da sua conta da Steam. O sistema suporta diferentes formatos de entrada:
+
+1. **URL de Perfil Personalizado (Vanity URL):** ex: `https://steamcommunity.com/id/nome_do_usuario/`
+2. **URL de ID Numérico:** ex: `https://steamcommunity.com/profiles/76561198000000000/`
+3. **SteamID Bruto:** O ID numérico de 17 dígitos direto (ex: `76561198000000000`).
+
+#### ⚙️ Como a Conexão Funciona:
+* **Higienização do Link:** O aplicativo analisa a entrada, descarta barras extras de navegação e extrai o identificador final do perfil.
+* **Resolução Automática de URL (Vanity URL):** Caso o usuário insira o apelido personalizado, o backend faz uma chamada de API (`ResolveVanityURL`) para obter o SteamID numérico real correspondente.
+* **Persistência do Perfil e Avatar:** Quando a sincronização é bem-sucedida, as informações (incluindo o apelido e a foto do perfil) são guardadas no Firebase Database. Ao abrir o aplicativo novamente, a sessão é restaurada e a sua foto de perfil é renderizada no topo da aba **Home (Tab 1)** e na aba de **Perfil (Tab 3)** automaticamente.
+* **Privacidade da Conta:** Para carregar a lista de jogos, conquistas e estatísticas, **a privacidade dos detalhes do seu jogo na Steam deve estar configurada como "Pública"**. Perfis privados exibirão um alerta e não conseguirão listar a biblioteca.
 
 ### 4. Executar Servidor de Desenvolvimento
 Inicie o servidor local do Vite para testar no navegador:
