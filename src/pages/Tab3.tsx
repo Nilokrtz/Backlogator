@@ -22,12 +22,14 @@ import { useAuth } from '../contexts/AuthContext';
 import { useHistory } from 'react-router-dom';
 
 import './Tab3.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ref, get, update } from 'firebase/database';
+import { realtimeDb } from '../firebase';
 
 const Tab3: React.FC = () => {
 
   
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const history = useHistory();
 
   const [steamConectada, setSteamConectada] = useState(false);
@@ -40,6 +42,52 @@ const Tab3: React.FC = () => {
   const [jogoAtual, setJogoAtual] = useState<any>(null);
   const [listaConquistas, setListaConquistas] = useState<any[]>([]);
   const [steamId, setSteamId] = useState('');
+
+  useEffect(() => {
+    if (!user) return;
+    const carregarPerfilSteam = async () => {
+      try {
+        const snapshot = await get(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`));
+        if (snapshot.exists()) {
+          const dados = snapshot.val();
+          if (dados.steamId) {
+            setSteamId(dados.steamId);
+            setNomeSteam(dados.nomeSteam || '');
+            setAvatarSteam(dados.avatarSteam || '');
+            setSteamConectada(true);
+
+            // Fetch player summary again to check if avatar or name changed
+            const responseSum = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamids=${dados.steamId}`);
+            const dataSum = await responseSum.json();
+            if (dataSum.response && dataSum.response.players && dataSum.response.players[0]) {
+              const perfil = dataSum.response.players[0];
+              setNomeSteam(perfil.personaname);
+              setAvatarSteam(perfil.avatarfull);
+              setPerfilPrivado(perfil.communityvisibilitystate !== 3);
+              
+              // Update database if changed
+              if (perfil.personaname !== dados.nomeSteam || perfil.avatarfull !== dados.avatarSteam) {
+                await update(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`), {
+                  nomeSteam: perfil.personaname,
+                  avatarSteam: perfil.avatarfull
+                });
+              }
+            }
+
+            // Fetch the games from Steam API safely
+            const responseJogos = await fetch(`https://corsproxy.io/?https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${dados.steamId}&include_appinfo=true&include_played_free_games=true`);
+            const dataJogos = await responseJogos.json();
+            const jogos = dataJogos.response?.games || [];
+            const jogosOrdenados = [...jogos].sort((a: any, b: any) => b.playtime_forever - a.playtime_forever);
+            setJogos(jogosOrdenados);
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao carregar perfil Steam:', error);
+      }
+    };
+    carregarPerfilSteam();
+  }, [user]);
   
 
   const handleLogout = async () => {
@@ -56,7 +104,7 @@ const Tab3: React.FC = () => {
     const linkID = linkSteamLimpo.split("/")
     const id = linkID[linkID.length - 1]
     
-  let steamIdFinal = ''
+    let steamIdFinal = ''
 
     if (/^\d+$/.test(id)) {
         steamIdFinal = id
@@ -64,9 +112,8 @@ const Tab3: React.FC = () => {
         const response = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&vanityurl=${id}`)
         const data = await response.json()
         steamIdFinal = data.response.steamid
-       
     }
-     setSteamId(steamIdFinal)
+    setSteamId(steamIdFinal)
 
     const response = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamids=${steamIdFinal}`)
     const data = await response.json()
@@ -78,15 +125,20 @@ const Tab3: React.FC = () => {
     setPerfilPrivado(perfil.communityvisibilitystate !== 3)
     setSteamConectada(true) 
 
-    
+    if (user) {
+      await update(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`), {
+        steamId: steamIdFinal,
+        nomeSteam: perfil.personaname,
+        avatarSteam: perfil.avatarfull
+      });
+    }
 
-const responseJogos = await fetch(`https://corsproxy.io/?https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${steamIdFinal}&include_appinfo=true&include_played_free_games=true`)
-const dataJogos = await responseJogos.json()
-const jogos = dataJogos.response.games
-const jogosOrdenados = jogos.sort((a: any, b: any) => b.playtime_forever - a.playtime_forever)
-setJogos(jogosOrdenados)
-
-}
+    const responseJogos = await fetch(`https://corsproxy.io/?https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${steamIdFinal}&include_appinfo=true&include_played_free_games=true`)
+    const dataJogos = await responseJogos.json()
+    const jogos = dataJogos.response?.games || []
+    const jogosOrdenados = [...jogos].sort((a: any, b: any) => b.playtime_forever - a.playtime_forever)
+    setJogos(jogosOrdenados)
+  }
 
 const abrirConquistas = async (jogo: any) => {
     setJogoAtual(jogo)

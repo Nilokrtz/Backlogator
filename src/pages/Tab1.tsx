@@ -54,17 +54,26 @@ const Tab1: React.FC = () => {
   ]);
 
   const [nomeUsuario, setNomeUsuario] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg');
 
-    useEffect(() => {
-    if (!user) return 
-    const buscarNome = async () => {
-        const snapshot = await get(ref(realtimeDb, `BancoDeDados/UIDs/${user!.uid}`))
+  useEffect(() => {
+    if (!user) return;
+    const buscarDadosPerfil = async () => {
+      try {
+        const snapshot = await get(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`));
         if (snapshot.exists()) {
-            setNomeUsuario(snapshot.val().nomeUsuario)
+          const dados = snapshot.val();
+          setNomeUsuario(dados.nomeUsuario);
+          if (dados.avatarSteam) {
+            setAvatarUrl(dados.avatarSteam);
+          }
         }
-    }
-    buscarNome()
-}, [user])
+      } catch (error) {
+        console.error('Erro ao buscar dados do perfil:', error);
+      }
+    };
+    buscarDadosPerfil();
+  }, [user]);
 
   return (
     <IonPage>
@@ -73,7 +82,7 @@ const Tab1: React.FC = () => {
           <div className="header-container">
             <div className="profile-section">
               <IonAvatar className="user-avatar">
-                <img src="https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg" alt="Avatar" />
+                <img src={avatarUrl} alt="Avatar" />
               </IonAvatar>
               
           
