@@ -29,30 +29,12 @@ const Tab1: React.FC = () => {
     }
   };
 
-  const [recomendados] = useState([
-    { appid: 1091500, name: 'Cyberpunk 2077' },
-    { appid: 1174180, name: 'Red Dead Redemption 2' },
-    { appid: 289070, name: 'Civilization VI' },
-  ]);
-
-  const [ofertas] = useState([
-    { appid: 322330, name: 'Don\'t Starve Together', precoOriginal: 'R$ 32,99', precoDesconto: 'R$ 11,21', desconto: '-66%' },
-    { appid: 292030, name: 'The Witcher 3', precoOriginal: 'R$ 129,99', precoDesconto: 'R$ 32,49', desconto: '-75%' },
-    { appid: 1086940, name: 'Baldur\'s Gate 3', precoOriginal: 'R$ 199,99', precoDesconto: 'R$ 159,99', desconto: '-20%' },
-  ]);
-
-  const [maisVendidos] = useState([
-    { appid: 730, name: 'Counter-Strike 2' },
-    { appid: 105600, name: 'Terraria' },
-    { appid: 271590, name: 'GTA V' },
-  ]);
-
-  const [gratuitos] = useState([
-    { appid: 570, name: 'Dota 2' },
-    { appid: 440, name: 'Team Fortress 2' },
-    { appid: 1172470, name: 'Apex Legends' },
-  ]);
-
+  const [featuredGames, setFeaturedGames] = useState<any[]>([]);
+  const [loadingFeatured, setLoadingFeatured] = useState(true);
+  const [featuredError, setFeaturedError] = useState<string | null>(null);
+  const [topSellers, setTopSellers] = useState<any[]>([]);
+  const [loadingTopSellers, setLoadingTopSellers] = useState(true);
+  const [topSellersError, setTopSellersError] = useState<string | null>(null);
   const [nomeUsuario, setNomeUsuario] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg');
 
@@ -74,6 +56,41 @@ const Tab1: React.FC = () => {
     };
     buscarDadosPerfil();
   }, [user]);
+
+  useEffect(() => {
+    const carregarDestaquesSteam = async () => {
+      try {
+        const response = await fetch('https://corsproxy.io/?https://store.steampowered.com/api/featured/');
+        const data = await response.json();
+        const games = Array.isArray(data.featured_win) ? data.featured_win : [];
+        setFeaturedGames(games);
+      } catch (error) {
+        console.error('Erro ao buscar destaques da Steam:', error);
+        setFeaturedError('Não foi possível carregar os destaques da Steam.');
+      } finally {
+        setLoadingFeatured(false);
+      }
+    };
+
+    const carregarTopSellers = async () => {
+      try {
+        const response = await fetch('https://corsproxy.io/?https://store.steampowered.com/api/featuredcategories?cc=br&l=brazilian');
+        const data = await response.json();
+        const sellers = data.top_sellers?.items ?? [];
+        setTopSellers(Array.isArray(sellers) ? sellers : []);
+      } catch (error) {
+        console.error('Erro ao buscar mais vendidos da Steam:', error);
+        setTopSellersError('Não foi possível carregar os mais vendidos do mês.');
+      } finally {
+        setLoadingTopSellers(false);
+      }
+    };
+
+    carregarDestaquesSteam();
+    carregarTopSellers();
+  }, []);
+
+  const ofertasEspeciais = featuredGames.filter((jogo) => jogo.discounted);
 
   return (
     <IonPage>
@@ -106,62 +123,85 @@ const Tab1: React.FC = () => {
         
         {}
         <div className="shelf-container">
-          <h2 className="shelf-title">Recomendado para você</h2>
-          <Swiper slidesPerView={1.5} spaceBetween={16} className="gallery-swiper">
-            {recomendados.map((jogo) => (
-              <SwiperSlide key={jogo.appid} onClick={() => history.push(`/game/${jogo.appid}`)}>
-                <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`} alt={jogo.name} className="gallery-image" />
-                <p className="game-title">{jogo.name}</p>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          <h2 className="shelf-title">Destaques da Steam</h2>
+          {loadingFeatured ? (
+            <p>Carregando destaques...</p>
+          ) : featuredError ? (
+            <p>{featuredError}</p>
+          ) : (
+            <Swiper slidesPerView={1.5} spaceBetween={16} className="gallery-swiper">
+              {featuredGames.map((jogo: any) => (
+                <SwiperSlide key={jogo.id} onClick={() => history.push(`/game/${jogo.id}`)}>
+                  <img
+                    src={jogo.header_image || `https://cdn.akamai.steamstatic.com/steam/apps/${jogo.id}/header.jpg`}
+                    alt={jogo.name}
+                    className="gallery-image"
+                  />
+                  <p className="game-title">{jogo.name}</p>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
+        </div>
+
+        {}
+        <div className="shelf-container">
+          <h2 className="shelf-title">Mais vendidos do mês</h2>
+          {loadingTopSellers ? (
+            <p>Carregando mais vendidos...</p>
+          ) : topSellersError ? (
+            <p>{topSellersError}</p>
+          ) : topSellers.length > 0 ? (
+            <Swiper slidesPerView={1.5} spaceBetween={16} className="gallery-swiper">
+              {topSellers.map((jogo: any) => (
+                <SwiperSlide key={jogo.id} onClick={() => history.push(`/game/${jogo.id}`)}>
+                  <img
+                    src={jogo.header_image || `https://cdn.akamai.steamstatic.com/steam/apps/${jogo.id}/header.jpg`}
+                    alt={jogo.name}
+                    className="gallery-image"
+                  />
+                  <p className="game-title">{jogo.name}</p>
+                  {jogo.discounted && (
+                    <span className="discount-tag">-{jogo.discount_percent}%</span>
+                  )}
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            <p>Nenhum mais vendido encontrado.</p>
+          )}
         </div>
 
         {}
         <div className="shelf-container">
           <h2 className="shelf-title highlight-title">Ofertas Especiais</h2>
-          <Swiper slidesPerView={1.5} spaceBetween={16} className="gallery-swiper">
-            {ofertas.map((jogo) => (
-              <SwiperSlide key={jogo.appid} onClick={() => history.push(`/game/${jogo.appid}`)}>
-                <div className="offer-card">
-                  <span className="discount-tag">{jogo.desconto}</span>
-                  <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`} alt={jogo.name} className="gallery-image" />
-                </div>
-                <p className="game-title">{jogo.name}</p>
-                <div className="price-container">
-                  <span className="old-price">{jogo.precoOriginal}</span>
-                  <span className="new-price">{jogo.precoDesconto}</span>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-
-        {}
-        <div className="shelf-container">
-          <h2 className="shelf-title">Mais Vendidos</h2>
-          <Swiper slidesPerView={1.5} spaceBetween={16} className="gallery-swiper">
-            {maisVendidos.map((jogo) => (
-              <SwiperSlide key={jogo.appid} onClick={() => history.push(`/game/${jogo.appid}`)}>
-                <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`} alt={jogo.name} className="gallery-image" />
-                <p className="game-title">{jogo.name}</p>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-
-        {}
-        <div className="shelf-container" style={{ marginBottom: '30px' }}>
-          <h2 className="shelf-title">Gratuitos em Alta</h2>
-          <Swiper slidesPerView={1.5} spaceBetween={16} className="gallery-swiper">
-            {gratuitos.map((jogo) => (
-              <SwiperSlide key={jogo.appid} onClick={() => history.push(`/game/${jogo.appid}`)}>
-                <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`} alt={jogo.name} className="gallery-image" />
-                <p className="game-title">{jogo.name}</p>
-                <p className="free-tag">Gratuito para Jogar</p>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          {loadingFeatured ? (
+            <p>Carregando ofertas...</p>
+          ) : featuredError ? (
+            <p>{featuredError}</p>
+          ) : ofertasEspeciais.length > 0 ? (
+            <Swiper slidesPerView={1.5} spaceBetween={16} className="gallery-swiper">
+              {ofertasEspeciais.map((jogo: any) => (
+                <SwiperSlide key={jogo.id} onClick={() => history.push(`/game/${jogo.id}`)}>
+                  <div className="offer-card">
+                    <span className="discount-tag">-{jogo.discount_percent}%</span>
+                    <img
+                      src={jogo.header_image || `https://cdn.akamai.steamstatic.com/steam/apps/${jogo.id}/header.jpg`}
+                      alt={jogo.name}
+                      className="gallery-image"
+                    />
+                  </div>
+                  <p className="game-title">{jogo.name}</p>
+                  <div className="price-container">
+                    <span className="old-price">{jogo.original_price ? `R$ ${(jogo.original_price / 100).toFixed(2).replace('.', ',')}` : ''}</span>
+                    <span className="new-price">{jogo.final_price ? `R$ ${(jogo.final_price / 100).toFixed(2).replace('.', ',')}` : ''}</span>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            <p>Nenhuma oferta encontrada.</p>
+          )}
         </div>
 
       </IonContent>
