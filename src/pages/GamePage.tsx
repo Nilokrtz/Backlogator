@@ -46,27 +46,27 @@ const GamePage: React.FC = () => {
 
 
     useEffect(() => {
-    const buscarDados = async () => {
-        const response = await fetch(`https://corsproxy.io/?https://store.steampowered.com/api/appdetails?appids=${appid}&l=brazilian`)
-        const data = await response.json()
-        const gameData = data[appid].data
+      const buscarDados = async () => {
+          const response = await fetch(`https://corsproxy.io/?https://store.steampowered.com/api/appdetails?appids=${appid}&l=brazilian`)
+          const data = await response.json()
+          const gameData = data[appid].data
 
-        setNomeJogo(gameData.name)
-        setDescricaoCurta(gameData.short_description)
-        setDescricaoLonga(gameData.detailed_description)
-        setGeneros(gameData.genres)
-        setImagemHeader(gameData.header_image)
-        setFotoScreenshot(gameData.screenshots)
-        setCategorias(gameData.categories)
-        setConquistas(gameData.achievements?.total ?? '0')
-        setDataLancamento(gameData.release_date.date)
-        setDesenvolvedores(gameData.developers)
-        setPublicadoras(gameData.publishers)
+          setNomeJogo(gameData.name)
+          setDescricaoCurta(gameData.short_description)
+          setDescricaoLonga(gameData.detailed_description)
+          setGeneros(gameData.genres)
+          setImagemHeader(gameData.header_image)
+          setFotoScreenshot(gameData.screenshots)
+          setCategorias(gameData.categories)
+          setConquistas(gameData.achievements?.total ?? '0')
+          setDataLancamento(gameData.release_date.date)
+          setDesenvolvedores(gameData.developers)
+          setPublicadoras(gameData.publishers)
 
-      }
-    buscarDados(
-      )
-}, [appid])
+        }
+      buscarDados(
+        )
+  }, [appid])
 
   return (
     <IonPage>

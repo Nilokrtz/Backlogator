@@ -53,7 +53,7 @@ function HomePage() {
 
                 </IonCardHeader>
 
-                <IonCardContent>
+                <IonCardContent className="card-buttons">
 
                   <IonButton 
                   id="btnlogar"

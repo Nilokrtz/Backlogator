@@ -13,13 +13,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { 
   search, 
   person, 
-  triangle, 
-  home,
-  gameController,
-  gameControllerOutline,
-  homeOutline,
-  personAddOutline,
-  gameControllerSharp} from 'ionicons/icons';
+  gameControllerOutline} from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
@@ -30,7 +24,7 @@ import ResetPassword from './pages/ResetPassword';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import GamePage from './pages/GamePage';
-import ErrorPage from './pages/ErrorPage';
+import ErrorBoundary from './components/ErrorBoundary';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -69,71 +63,71 @@ const App: React.FC = () => (
     <IonApp>
       <IonReactRouter>
 
-        <IonRouterOutlet>
+        <ErrorBoundary>
 
-          <Route exact path="/">
-            <Redirect to="/home" />
-          </Route>
+          <IonRouterOutlet>
 
-          <Route exact path="/home">
-            <Home />
-          </Route>
+            <Route exact path="/">
+              <Redirect to="/home" />
+            </Route>
 
-          <Route exact path="/login">
-            <Login />
-          </Route>
+            <Route exact path="/home">
+              <Home />
+            </Route>
 
-          <Route exact path="/reset-password">
-            <ResetPassword />
-          </Route>
+            <Route exact path="/login">
+              <Login />
+            </Route>
 
-          <Route exact path="/register">
-            <Register />
-          </Route>
+            <Route exact path="/reset-password">
+              <ResetPassword />
+            </Route>
 
-          <Route exact path="/game/:appid">
-            <GamePage />
-          </Route>
+            <Route exact path="/register">
+              <Register />
+            </Route>
 
-          <Route exact path="/errorpage">
-            <ErrorPage />
-          </Route>
-          
-          <Route path="/tabs">
-            <IonTabs>
+            <Route exact path="/game/:appid">
+              <GamePage />
+            </Route>
+            
+            <Route path="/tabs">
+              <IonTabs>
 
-              <IonRouterOutlet>
-                <PrivateRoute exact path="/tabs/tab1" component={Tab1} />
-                <PrivateRoute exact path="/tabs/tab2" component={Tab2} />
-                <PrivateRoute exact path="/tabs/tab3" component={Tab3} />
+                <IonRouterOutlet>
+                  <PrivateRoute exact path="/tabs/tab1" component={Tab1} />
+                  <PrivateRoute exact path="/tabs/tab2" component={Tab2} />
+                  <PrivateRoute exact path="/tabs/tab3" component={Tab3} />
 
-                {/* padrão das tabs */}
-                <Route exact path="/tabs">
-                  <Redirect to="/tabs/tab1" />
-                </Route>
-              </IonRouterOutlet>
+                  {/* padrão das tabs */}
+                  <Route exact path="/tabs">
+                    <Redirect to="/tabs/tab1" />
+                  </Route>
+                </IonRouterOutlet>
 
-              <IonTabBar slot="bottom">
-                <IonTabButton tab="tab1" href="/tabs/tab1">
-                  <IonIcon icon={gameControllerOutline} />
-                  <IonLabel>Início</IonLabel>
-                </IonTabButton>
+                <IonTabBar slot="bottom">
+                  <IonTabButton tab="tab1" href="/tabs/tab1">
+                    <IonIcon icon={gameControllerOutline} />
+                    <IonLabel>Início</IonLabel>
+                  </IonTabButton>
 
-                <IonTabButton tab="tab2" href="/tabs/tab2">
-                  <IonIcon icon={search} />
-                  <IonLabel>Pesquisa</IonLabel>
-                </IonTabButton>
+                  <IonTabButton tab="tab2" href="/tabs/tab2">
+                    <IonIcon icon={search} />
+                    <IonLabel>Pesquisa</IonLabel>
+                  </IonTabButton>
 
-                <IonTabButton tab="tab3" href="/tabs/tab3">
-                  <IonIcon icon={person} />
-                  <IonLabel>Perfil</IonLabel>
-                </IonTabButton>
-              </IonTabBar>
+                  <IonTabButton tab="tab3" href="/tabs/tab3">
+                    <IonIcon icon={person} />
+                    <IonLabel>Perfil</IonLabel>
+                  </IonTabButton>
+                </IonTabBar>
 
-            </IonTabs>
-          </Route>
+              </IonTabs>
+            </Route>
 
-        </IonRouterOutlet>
+          </IonRouterOutlet>
+
+        </ErrorBoundary>
 
       </IonReactRouter>
     </IonApp>

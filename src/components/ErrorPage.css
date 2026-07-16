@@ -31,3 +31,8 @@
   opacity: 0.8;
   max-width: 280px;
 }
+
+.error-button {
+  margin-top: 16px;
+  width: 220px;
+}
