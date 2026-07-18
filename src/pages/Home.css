@@ -33,3 +33,10 @@
     max-width: 350px; 
     border-radius: 20px;
 }
+
+.card-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
