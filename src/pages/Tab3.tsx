@@ -255,44 +255,36 @@ const abrirConquistas = async (jogo: any) => {
           </Swiper>
         </div>
       )}
-      {}
-
-        {/*
-       parte temporária para teste das conquistas
-        */}
 
       <IonModal isOpen={modalConquistas} onDidDismiss={() => setModalConquistas(false)}>
-  <IonHeader>
-    <IonToolbar>
-      <IonTitle>{jogoAtual?.name}</IonTitle>
-      <IonButton slot="end" fill="clear" onClick={() => setModalConquistas(false)}>
-        Fechar
-      </IonButton>
-      <IonButton slot="end" color="success" fill="clear" onClick={() => {
-        setModalConquistas(false)
-        history.push(`/game/${jogoAtual?.appid}`)
-      }}>
-        Ver jogo
-      </IonButton>
-    </IonToolbar>
-  </IonHeader>
-  <IonContent>
-    <h2 style={{padding: '16px'}}>Conquistas</h2>
-    {listaConquistas.map((conquista, index) => (
-      <div key={index} style={{display: 'flex', alignItems: 'center', padding: '8px 16px', gap: '12px'}}>
-        <img src={conquista.icone} style={{width: '48px', height: '48px'}} />
-        <p style={{
-          margin: 0,
-          color: conquista.desbloqueada ? 'white' : 'gray'
-        }}>
-          {conquista.nome}
-        </p>
-      </div>
-    ))}
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>{jogoAtual?.name}</IonTitle>
+          <IonButton slot="end" fill="clear" onClick={() => setModalConquistas(false)}>
+            Fechar
+          </IonButton>
+          <IonButton slot="end" color="success" fill="clear" onClick={() => {
+            setModalConquistas(false)
+            history.push(`/game/${jogoAtual?.appid}`)
+          }}>
+            Ver jogo
+          </IonButton>
+        </IonToolbar>
+      </IonHeader>
 
-        {/*
-       parte temporária para teste das conquistas
-        */}
+      <IonContent>
+        <h2 style={{padding: '16px'}}>Conquistas</h2>
+        {listaConquistas.map((conquista, index) => (
+          <div key={index} style={{display: 'flex', alignItems: 'center', padding: '8px 16px', gap: '12px'}}>
+            <img src={conquista.icone} style={{width: '48px', height: '48px'}} />
+            <p style={{
+              margin: 0,
+              color: conquista.desbloqueada ? 'white' : 'gray'
+            }}>
+              {conquista.nome}
+            </p>
+          </div>
+        ))}
 
       </IonContent>
       </IonModal>

@@ -35,7 +35,7 @@ const Tab1: React.FC = () => {
   const [topSellers, setTopSellers] = useState<any[]>([]);
   const [loadingTopSellers, setLoadingTopSellers] = useState(true);
   const [topSellersError, setTopSellersError] = useState<string | null>(null);
-  const [nomeUsuario, setNomeUsuario] = useState('');
+  const [nomeSteam, setNomeSteam] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg');
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const Tab1: React.FC = () => {
         const snapshot = await get(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`));
         if (snapshot.exists()) {
           const dados = snapshot.val();
-          setNomeUsuario(dados.nomeUsuario);
+          setNomeSteam(dados.nomeSteam || '');
           if (dados.avatarSteam) {
             setAvatarUrl(dados.avatarSteam);
           }
@@ -106,7 +106,7 @@ const Tab1: React.FC = () => {
 
               {}
               <span className="welcome-text">
-                Olá, {nomeUsuario || 'Jogador'}
+                Olá, {nomeSteam || 'Jogador'}
               </span>
             </div>
             

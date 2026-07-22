@@ -34,7 +34,6 @@ const GamePage: React.FC = () => {
   const { appid } = useParams<{ appid: string }>();
   const [nomeJogo, setNomeJogo] = useState('');
   const [descricaoCurta, setDescricaoCurta] = useState('');
-  const [descricaoLonga, setDescricaoLonga] = useState('');
   const [generos, setGeneros] =useState<any[]>([]);
   const [imagemHeader, setImagemHeader] = useState('');
   const [fotoScreenshot, setFotoScreenshot] = useState<any[]>([]);
@@ -53,7 +52,6 @@ const GamePage: React.FC = () => {
 
           setNomeJogo(gameData.name)
           setDescricaoCurta(gameData.short_description)
-          setDescricaoLonga(gameData.detailed_description)
           setGeneros(gameData.genres)
           setImagemHeader(gameData.header_image)
           setFotoScreenshot(gameData.screenshots)
@@ -161,40 +159,43 @@ const GamePage: React.FC = () => {
 
           </div>
 
+          <div className="game-section">
+
+            <h3>
+              Resumo
+            </h3>
+
+            <div
+              dangerouslySetInnerHTML={{ __html: descricaoCurta }}
+            />
+
+          </div>
+
+          <h3>
+            Galeria
+          </h3>
+
+          <Swiper
+            slidesPerView={1.1}
+            spaceBetween={12}
+            className="gallery-swiper"
+          >
+            {fotoScreenshot.map((image, index) => (
+
+              <SwiperSlide key={index}>
+
+                <img
+                  src={image.path_full}
+                  alt={`Screenshot ${index + 1}`}
+                  className="gallery-image"
+                />
+
+              </SwiperSlide>
+
+            ))}
+          </Swiper>
+
         </div>
-
-        <h2 className="section-title">
-          Galeria
-        </h2>
-
-        <Swiper
-          slidesPerView={1.1}
-          spaceBetween={12}
-          className="gallery-swiper"
-        >
-
-          {fotoScreenshot.map((image, index) => (
-
-            <SwiperSlide key={index}>
-
-              <img
-                src={image.path_full}
-                alt={`Screenshot ${index + 1}`}
-                className="gallery-image"
-              />
-
-            </SwiperSlide>
-
-          ))}
-
-        </Swiper>
-
-        <div 
-          className="short-description"
-          dangerouslySetInnerHTML={{ __html: descricaoCurta }}
-        />
-
-        <div dangerouslySetInnerHTML={{ __html: descricaoLonga }} />
 
       </IonContent>
 
