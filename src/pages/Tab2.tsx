@@ -176,6 +176,11 @@ const Tab2: React.FC = () => {
                     src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`}
                     alt={jogo.name}
                     className="gallery-image"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      target.onerror = null;
+                      target.src = 'https://placehold.co/460x215/284c36/ffffff?text=Sem+Capa';
+                    }}
                   />
                   <p>{jogo.name}</p>
                   {jogo.price && <p style={{ fontSize: '12px', color: '#2dd36f' }}>{jogo.price}</p>}

@@ -136,6 +136,11 @@ const Tab1: React.FC = () => {
                     src={jogo.header_image || `https://cdn.akamai.steamstatic.com/steam/apps/${jogo.id}/header.jpg`}
                     alt={jogo.name}
                     className="gallery-image"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      target.onerror = null;
+                      target.src = 'https://placehold.co/460x215/284c36/ffffff?text=Sem+Capa';
+                    }}
                   />
                   <p className="game-title">{jogo.name}</p>
                 </SwiperSlide>
@@ -159,6 +164,11 @@ const Tab1: React.FC = () => {
                     src={jogo.header_image || `https://cdn.akamai.steamstatic.com/steam/apps/${jogo.id}/header.jpg`}
                     alt={jogo.name}
                     className="gallery-image"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      target.onerror = null;
+                      target.src = 'https://placehold.co/460x215/284c36/ffffff?text=Sem+Capa';
+                    }}
                   />
                   <p className="game-title">{jogo.name}</p>
                   {jogo.discounted && (
@@ -189,6 +199,11 @@ const Tab1: React.FC = () => {
                       src={jogo.header_image || `https://cdn.akamai.steamstatic.com/steam/apps/${jogo.id}/header.jpg`}
                       alt={jogo.name}
                       className="gallery-image"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        target.onerror = null;
+                        target.src = 'https://placehold.co/460x215/284c36/ffffff?text=Sem+Capa';
+                      }}
                     />
                   </div>
                   <p className="game-title">{jogo.name}</p>

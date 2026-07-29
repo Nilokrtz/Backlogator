@@ -245,9 +245,18 @@ const abrirConquistas = async (jogo: any) => {
             {jogos.map((jogo) => (
               <SwiperSlide 
               key={jogo.appid}
-              onClick={() => abrirConquistas(jogo)}
+              onClick={() => history.push(`/game/${jogo.appid}`)}
+              style={{ cursor: 'pointer' }}
               >
-                <img src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`} />
+                <img 
+                  src={`https://cdn.akamai.steamstatic.com/steam/apps/${jogo.appid}/header.jpg`} 
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    target.onerror = null;
+                    target.src = 'https://placehold.co/460x215/284c36/ffffff?text=Sem+Capa';
+                  }}
+                  alt={jogo.name}
+                />
                 <p style={{fontSize: '12px', textAlign: 'center'}}>{jogo.name}</p>
                 <p style={{fontSize: '11px', textAlign: 'center'}}>{Math.round(jogo.playtime_forever / 60)}h</p>
               </SwiperSlide>

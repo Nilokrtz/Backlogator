@@ -44,27 +44,39 @@ const GamePage: React.FC = () => {
   const [publicadoras, setPublicadoras] = useState<any[]>([]);
 
 
-    useEffect(() => {
-      const buscarDados = async () => {
-          const response = await fetch(`https://corsproxy.io/?https://store.steampowered.com/api/appdetails?appids=${appid}&l=brazilian`)
-          const data = await response.json()
-          const gameData = data[appid].data
-
-          setNomeJogo(gameData.name)
-          setDescricaoCurta(gameData.short_description)
-          setGeneros(gameData.genres)
-          setImagemHeader(gameData.header_image)
-          setFotoScreenshot(gameData.screenshots)
-          setCategorias(gameData.categories)
-          setConquistas(gameData.achievements?.total ?? '0')
-          setDataLancamento(gameData.release_date.date)
-          setDesenvolvedores(gameData.developers)
-          setPublicadoras(gameData.publishers)
-
+  useEffect(() => {
+    const buscarDados = async () => {
+      try {
+        const response = await fetch(`https://corsproxy.io/?https://store.steampowered.com/api/appdetails?appids=${appid}&l=brazilian`);
+        if (!response.ok) {
+          throw new Error('Não foi possível conectar ao servidor da Steam.');
         }
-      buscarDados(
-        )
-  }, [appid])
+        const data = await response.json();
+        if (!data || !data[appid] || !data[appid].success) {
+          throw new Error('Este jogo não foi encontrado ou não está disponível na Steam.');
+        }
+        const gameData = data[appid].data;
+
+        setNomeJogo(gameData.name || '');
+        setDescricaoCurta(gameData.short_description || '');
+        setGeneros(gameData.genres || []);
+        setImagemHeader(gameData.header_image || '');
+        setFotoScreenshot(gameData.screenshots || []);
+        setCategorias(gameData.categories || []);
+        setConquistas(gameData.achievements?.total ?? '0');
+        setDataLancamento(gameData.release_date?.date || '');
+        setDesenvolvedores(gameData.developers || []);
+        setPublicadoras(gameData.publishers || []);
+      } catch (error: any) {
+        console.error('Erro ao buscar detalhes do jogo:', error);
+        history.push('/error', {
+          title: 'Erro de Conexão',
+          message: error.message || 'Ocorreu um problema ao obter as informações do jogo na Steam.'
+        });
+      }
+    };
+    buscarDados();
+  }, [appid, history]);
 
   return (
     <IonPage>

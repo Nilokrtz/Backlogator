@@ -2,6 +2,8 @@ export interface JogoPesquisa {
   appid: number;
   name: string;
   genres?: string[];
+  price?: string;
+  shortDescription?: string;
 }
 
 export function filterJogos(jogos: JogoPesquisa[], query: string, genero: string) {
