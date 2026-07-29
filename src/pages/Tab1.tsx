@@ -35,19 +35,36 @@ const Tab1: React.FC = () => {
   const [topSellers, setTopSellers] = useState<any[]>([]);
   const [loadingTopSellers, setLoadingTopSellers] = useState(true);
   const [topSellersError, setTopSellersError] = useState<string | null>(null);
-  const [nomeSteam, setNomeSteam] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState('https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg');
+  const [nomeSteam, setNomeSteam] = useState(() => {
+    return user ? localStorage.getItem(`steam_nome_${user.uid}`) || '' : '';
+  });
+  const [avatarUrl, setAvatarUrl] = useState(() => {
+    return user ? localStorage.getItem(`steam_avatar_${user.uid}`) || 'https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg' : 'https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg';
+  });
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setNomeSteam('');
+      setAvatarUrl('https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg');
+      return;
+    }
+
+    const cachedNome = localStorage.getItem(`steam_nome_${user.uid}`);
+    const cachedAvatar = localStorage.getItem(`steam_avatar_${user.uid}`);
+    if (cachedNome) setNomeSteam(cachedNome);
+    if (cachedAvatar) setAvatarUrl(cachedAvatar);
+
     const buscarDadosPerfil = async () => {
       try {
         const snapshot = await get(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`));
         if (snapshot.exists()) {
           const dados = snapshot.val();
-          setNomeSteam(dados.nomeSteam || '');
+          const nome = dados.nomeSteam || '';
+          setNomeSteam(nome);
+          localStorage.setItem(`steam_nome_${user.uid}`, nome);
           if (dados.avatarSteam) {
             setAvatarUrl(dados.avatarSteam);
+            localStorage.setItem(`steam_avatar_${user.uid}`, dados.avatarSteam);
           }
         }
       } catch (error) {

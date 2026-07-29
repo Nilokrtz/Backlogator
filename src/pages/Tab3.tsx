@@ -32,19 +32,67 @@ const Tab3: React.FC = () => {
   const { user, logout } = useAuth();
   const history = useHistory();
 
-  const [steamConectada, setSteamConectada] = useState(false);
-  const [linkSteam, setLinkSteam] = useState('');
-  const [avatarSteam, setAvatarSteam] = useState('');
-  const [nomeSteam, setNomeSteam] = useState('');
-  const [jogos, setJogos] = useState<any[]>([]);
+  const [steamConectada, setSteamConectada] = useState(() => {
+    return user ? localStorage.getItem(`steam_conectada_${user.uid}`) === 'true' : false;
+  });
+  const [linkSteam, setLinkSteam] = useState(() => {
+    return user ? localStorage.getItem(`steam_link_${user.uid}`) || '' : '';
+  });
+  const [avatarSteam, setAvatarSteam] = useState(() => {
+    return user ? localStorage.getItem(`steam_avatar_${user.uid}`) || '' : '';
+  });
+  const [nomeSteam, setNomeSteam] = useState(() => {
+    return user ? localStorage.getItem(`steam_nome_${user.uid}`) || '' : '';
+  });
+  const [jogos, setJogos] = useState<any[]>(() => {
+    if (!user) return [];
+    try {
+      const cached = localStorage.getItem(`steam_jogos_${user.uid}`);
+      return cached ? JSON.parse(cached) : [];
+    } catch {
+      return [];
+    }
+  });
   const [perfilPrivado, setPerfilPrivado] = useState(false);
   const [modalConquistas, setModalConquistas] = useState(false);
   const [jogoAtual, setJogoAtual] = useState<any>(null);
   const [listaConquistas, setListaConquistas] = useState<any[]>([]);
-  const [steamId, setSteamId] = useState('');
+  const [steamId, setSteamId] = useState(() => {
+    return user ? localStorage.getItem(`steam_id_${user.uid}`) || '' : '';
+  });
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setSteamId('');
+      setNomeSteam('');
+      setAvatarSteam('');
+      setSteamConectada(false);
+      setLinkSteam('');
+      setJogos([]);
+      return;
+    }
+
+    // Load from cache immediately
+    const cachedId = localStorage.getItem(`steam_id_${user.uid}`);
+    const cachedNome = localStorage.getItem(`steam_nome_${user.uid}`);
+    const cachedAvatar = localStorage.getItem(`steam_avatar_${user.uid}`);
+    const cachedConectada = localStorage.getItem(`steam_conectada_${user.uid}`) === 'true';
+    const cachedLink = localStorage.getItem(`steam_link_${user.uid}`);
+    try {
+      const cachedJogos = localStorage.getItem(`steam_jogos_${user.uid}`);
+      if (cachedJogos) {
+        setJogos(JSON.parse(cachedJogos));
+      }
+    } catch (e) {
+      console.error('Erro ao ler jogos do cache:', e);
+    }
+
+    if (cachedId) setSteamId(cachedId);
+    if (cachedNome) setNomeSteam(cachedNome);
+    if (cachedAvatar) setAvatarSteam(cachedAvatar);
+    setSteamConectada(cachedConectada);
+    if (cachedLink) setLinkSteam(cachedLink);
+
     const carregarPerfilSteam = async () => {
       try {
         const snapshot = await get(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`));
@@ -56,6 +104,11 @@ const Tab3: React.FC = () => {
             setAvatarSteam(dados.avatarSteam || '');
             setSteamConectada(true);
 
+            localStorage.setItem(`steam_id_${user.uid}`, dados.steamId);
+            localStorage.setItem(`steam_nome_${user.uid}`, dados.nomeSteam || '');
+            localStorage.setItem(`steam_avatar_${user.uid}`, dados.avatarSteam || '');
+            localStorage.setItem(`steam_conectada_${user.uid}`, 'true');
+
             // Fetch player summary again to check if avatar or name changed
             const responseSum = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamids=${dados.steamId}`);
             const dataSum = await responseSum.json();
@@ -65,6 +118,9 @@ const Tab3: React.FC = () => {
               setAvatarSteam(perfil.avatarfull);
               setPerfilPrivado(perfil.communityvisibilitystate !== 3);
               
+              localStorage.setItem(`steam_nome_${user.uid}`, perfil.personaname);
+              localStorage.setItem(`steam_avatar_${user.uid}`, perfil.avatarfull);
+
               // Update database if changed
               if (perfil.personaname !== dados.nomeSteam || perfil.avatarfull !== dados.avatarSteam) {
                 await update(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`), {
@@ -80,6 +136,7 @@ const Tab3: React.FC = () => {
             const jogos = dataJogos.response?.games || [];
             const jogosOrdenados = [...jogos].sort((a: any, b: any) => b.playtime_forever - a.playtime_forever);
             setJogos(jogosOrdenados);
+            localStorage.setItem(`steam_jogos_${user.uid}`, JSON.stringify(jogosOrdenados));
           }
         }
       } catch (error) {
@@ -126,6 +183,12 @@ const Tab3: React.FC = () => {
     setSteamConectada(true) 
 
     if (user) {
+      localStorage.setItem(`steam_id_${user.uid}`, steamIdFinal);
+      localStorage.setItem(`steam_nome_${user.uid}`, perfil.personaname);
+      localStorage.setItem(`steam_avatar_${user.uid}`, perfil.avatarfull);
+      localStorage.setItem(`steam_conectada_${user.uid}`, 'true');
+      localStorage.setItem(`steam_link_${user.uid}`, linkSteam);
+
       await update(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`), {
         steamId: steamIdFinal,
         nomeSteam: perfil.personaname,
@@ -138,6 +201,9 @@ const Tab3: React.FC = () => {
     const jogos = dataJogos.response?.games || []
     const jogosOrdenados = [...jogos].sort((a: any, b: any) => b.playtime_forever - a.playtime_forever)
     setJogos(jogosOrdenados)
+    if (user) {
+      localStorage.setItem(`steam_jogos_${user.uid}`, JSON.stringify(jogosOrdenados));
+    }
   }
 
 const abrirConquistas = async (jogo: any) => {
