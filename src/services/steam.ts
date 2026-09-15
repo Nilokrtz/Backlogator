@@ -1,3 +1,5 @@
+import { getProxyUrl } from './proxy';
+
 const API_KEY = import.meta.env.VITE_STEAM_API_KEY as string | undefined;
 
 function assertKey() {
@@ -6,10 +8,10 @@ function assertKey() {
 
 function buildUrl(path: string, params: Record<string, string | number | boolean> = {}) {
   assertKey();
-  const url = new URL(`https://corsproxy.io/?https://api.steampowered.com/${path}`);
-  url.searchParams.set('key', API_KEY!);
-  Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, String(v)));
-  return url.toString();
+  const targetUrl = new URL(`https://api.steampowered.com/${path}`);
+  targetUrl.searchParams.set('key', API_KEY!);
+  Object.entries(params).forEach(([k, v]) => targetUrl.searchParams.set(k, String(v)));
+  return getProxyUrl(targetUrl.toString());
 }
 
 export async function resolveVanityURL(vanityurl: string) {

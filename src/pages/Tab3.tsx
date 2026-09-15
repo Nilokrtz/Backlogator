@@ -25,6 +25,7 @@ import './Tab3.css';
 import { useState, useEffect } from 'react';
 import { ref, get, update } from 'firebase/database';
 import { realtimeDb } from '../firebase';
+import { getProxyUrl } from '../services/proxy';
 
 const Tab3: React.FC = () => {
 
@@ -110,7 +111,7 @@ const Tab3: React.FC = () => {
             localStorage.setItem(`steam_conectada_${user.uid}`, 'true');
 
             // Fetch player summary again to check if avatar or name changed
-            const responseSum = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamids=${dados.steamId}`);
+            const responseSum = await fetch(getProxyUrl(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamids=${dados.steamId}`));
             const dataSum = await responseSum.json();
             if (dataSum.response && dataSum.response.players && dataSum.response.players[0]) {
               const perfil = dataSum.response.players[0];
@@ -131,7 +132,7 @@ const Tab3: React.FC = () => {
             }
 
             // Fetch the games from Steam API safely
-            const responseJogos = await fetch(`https://corsproxy.io/?https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${dados.steamId}&include_appinfo=true&include_played_free_games=true`);
+            const responseJogos = await fetch(getProxyUrl(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${dados.steamId}&include_appinfo=true&include_played_free_games=true`));
             const dataJogos = await responseJogos.json();
             const jogos = dataJogos.response?.games || [];
             const jogosOrdenados = [...jogos].sort((a: any, b: any) => b.playtime_forever - a.playtime_forever);
@@ -166,13 +167,13 @@ const Tab3: React.FC = () => {
     if (/^\d+$/.test(id)) {
         steamIdFinal = id
     } else {
-        const response = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&vanityurl=${id}`)
+        const response = await fetch(getProxyUrl(`https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&vanityurl=${id}`))
         const data = await response.json()
         steamIdFinal = data.response.steamid
     }
     setSteamId(steamIdFinal)
 
-    const response = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamids=${steamIdFinal}`)
+    const response = await fetch(getProxyUrl(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamids=${steamIdFinal}`))
     const data = await response.json()
     const perfil = data.response.players[0]
     console.log('visibilidade:', perfil.communityvisibilitystate)
@@ -196,7 +197,7 @@ const Tab3: React.FC = () => {
       });
     }
 
-    const responseJogos = await fetch(`https://corsproxy.io/?https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${steamIdFinal}&include_appinfo=true&include_played_free_games=true`)
+    const responseJogos = await fetch(getProxyUrl(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${steamIdFinal}&include_appinfo=true&include_played_free_games=true`))
     const dataJogos = await responseJogos.json()
     const jogos = dataJogos.response?.games || []
     const jogosOrdenados = [...jogos].sort((a: any, b: any) => b.playtime_forever - a.playtime_forever)
@@ -209,11 +210,11 @@ const Tab3: React.FC = () => {
 const abrirConquistas = async (jogo: any) => {
     setJogoAtual(jogo)
     
-    const responseUsuario = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${steamId}&appid=${jogo.appid}&l=brazilian`)
+    const responseUsuario = await fetch(getProxyUrl(`https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${steamId}&appid=${jogo.appid}&l=brazilian`))
     const dataUsuario = await responseUsuario.json()
     const conquistasUsuario = dataUsuario.playerstats.achievements
  
-    const responseSchema = await fetch(`https://corsproxy.io/?https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&appid=${jogo.appid}&l=brazilian`)
+    const responseSchema = await fetch(getProxyUrl(`https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&appid=${jogo.appid}&l=brazilian`))
     const dataSchema = await responseSchema.json()
     const schemaConquistas = dataSchema.game.availableGameStats.achievements
 

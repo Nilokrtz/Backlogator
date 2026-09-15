@@ -23,6 +23,7 @@ import 'swiper/css';
 import './GamePage.css';
 
 import { useHistory } from 'react-router-dom';
+import { getProxyUrl } from '../services/proxy';
 
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -47,7 +48,7 @@ const GamePage: React.FC = () => {
   useEffect(() => {
     const buscarDados = async () => {
       try {
-        const response = await fetch(`https://corsproxy.io/?https://store.steampowered.com/api/appdetails?appids=${appid}&l=brazilian`);
+        const response = await fetch(getProxyUrl(`https://store.steampowered.com/api/appdetails?appids=${appid}&l=brazilian`));
         if (!response.ok) {
           throw new Error('Não foi possível conectar ao servidor da Steam.');
         }

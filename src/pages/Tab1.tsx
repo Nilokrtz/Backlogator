@@ -15,6 +15,7 @@ import './Tab1.css';
 import { useEffect, useState } from 'react';
 import { get, ref } from 'firebase/database';
 import { realtimeDb } from '../firebase';
+import { getProxyUrl } from '../services/proxy';
 
 const Tab1: React.FC = () => {
   const { user, logout } = useAuth();
@@ -77,7 +78,7 @@ const Tab1: React.FC = () => {
   useEffect(() => {
     const carregarDestaquesSteam = async () => {
       try {
-        const response = await fetch('https://corsproxy.io/?https://store.steampowered.com/api/featured/');
+        const response = await fetch(getProxyUrl('https://store.steampowered.com/api/featured/'));
         const data = await response.json();
         const games = Array.isArray(data.featured_win) ? data.featured_win : [];
         setFeaturedGames(games);
@@ -91,7 +92,7 @@ const Tab1: React.FC = () => {
 
     const carregarTopSellers = async () => {
       try {
-        const response = await fetch('https://corsproxy.io/?https://store.steampowered.com/api/featuredcategories?cc=br&l=brazilian');
+        const response = await fetch(getProxyUrl('https://store.steampowered.com/api/featuredcategories?cc=br&l=brazilian'));
         const data = await response.json();
         const sellers = data.top_sellers?.items ?? [];
         setTopSellers(Array.isArray(sellers) ? sellers : []);

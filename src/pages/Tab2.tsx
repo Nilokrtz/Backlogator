@@ -21,6 +21,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import './Tab2.css';
 import { filterJogos } from './tab2Utils';
+import { getProxyUrl } from '../services/proxy';
 
 const Tab2: React.FC = () => {
   const { logout } = useAuth();
@@ -53,7 +54,7 @@ const Tab2: React.FC = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://corsproxy.io/?https://store.steampowered.com/search/?term=${encodeURIComponent(termo)}&supportedlang=brazilian&ndl=1`
+          getProxyUrl(`https://store.steampowered.com/search/?term=${encodeURIComponent(termo)}&supportedlang=brazilian&ndl=1`)
         );
         const html = await response.text();
 
@@ -66,7 +67,7 @@ const Tab2: React.FC = () => {
           appids.map(async (appid) => {
             try {
               const responseDetalhes = await fetch(
-                `https://corsproxy.io/?https://store.steampowered.com/api/appdetails?appids=${appid}&l=brazilian`
+                getProxyUrl(`https://store.steampowered.com/api/appdetails?appids=${appid}&l=brazilian`)
               );
               const dataDetalhes = await responseDetalhes.json();
               const appData = dataDetalhes?.[appid]?.data;
