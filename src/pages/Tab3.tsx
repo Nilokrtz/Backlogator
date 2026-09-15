@@ -112,32 +112,36 @@ const Tab3: React.FC = () => {
 
             // Fetch player summary again to check if avatar or name changed
             const responseSum = await fetch(getProxyUrl(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamids=${dados.steamId}`));
-            const dataSum = await responseSum.json();
-            if (dataSum.response && dataSum.response.players && dataSum.response.players[0]) {
-              const perfil = dataSum.response.players[0];
-              setNomeSteam(perfil.personaname);
-              setAvatarSteam(perfil.avatarfull);
-              setPerfilPrivado(perfil.communityvisibilitystate !== 3);
-              
-              localStorage.setItem(`steam_nome_${user.uid}`, perfil.personaname);
-              localStorage.setItem(`steam_avatar_${user.uid}`, perfil.avatarfull);
+            if (responseSum.ok) {
+              const dataSum = await responseSum.json();
+              if (dataSum.response && dataSum.response.players && dataSum.response.players[0]) {
+                const perfil = dataSum.response.players[0];
+                setNomeSteam(perfil.personaname);
+                setAvatarSteam(perfil.avatarfull);
+                setPerfilPrivado(perfil.communityvisibilitystate !== 3);
+                
+                localStorage.setItem(`steam_nome_${user.uid}`, perfil.personaname);
+                localStorage.setItem(`steam_avatar_${user.uid}`, perfil.avatarfull);
 
-              // Update database if changed
-              if (perfil.personaname !== dados.nomeSteam || perfil.avatarfull !== dados.avatarSteam) {
-                await update(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`), {
-                  nomeSteam: perfil.personaname,
-                  avatarSteam: perfil.avatarfull
-                });
+                // Update database if changed
+                if (perfil.personaname !== dados.nomeSteam || perfil.avatarfull !== dados.avatarSteam) {
+                  await update(ref(realtimeDb, `BancoDeDados/UIDs/${user.uid}`), {
+                    nomeSteam: perfil.personaname,
+                    avatarSteam: perfil.avatarfull
+                  });
+                }
               }
             }
 
             // Fetch the games from Steam API safely
             const responseJogos = await fetch(getProxyUrl(`https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${dados.steamId}&include_appinfo=true&include_played_free_games=true`));
-            const dataJogos = await responseJogos.json();
-            const jogos = dataJogos.response?.games || [];
-            const jogosOrdenados = [...jogos].sort((a: any, b: any) => b.playtime_forever - a.playtime_forever);
-            setJogos(jogosOrdenados);
-            localStorage.setItem(`steam_jogos_${user.uid}`, JSON.stringify(jogosOrdenados));
+            if (responseJogos.ok) {
+              const dataJogos = await responseJogos.json();
+              const jogos = dataJogos.response?.games || [];
+              const jogosOrdenados = [...jogos].sort((a: any, b: any) => b.playtime_forever - a.playtime_forever);
+              setJogos(jogosOrdenados);
+              localStorage.setItem(`steam_jogos_${user.uid}`, JSON.stringify(jogosOrdenados));
+            }
           }
         }
       } catch (error) {
@@ -279,7 +283,11 @@ const abrirConquistas = async (jogo: any) => {
         ) : (
           <div>
             <div className="profile-header">
-              <img src={avatarSteam} className="avatar" />
+              <img 
+                src={avatarSteam || 'https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg'} 
+                alt={nomeSteam || 'Avatar'}
+                className="avatar" 
+              />
               <h1>{nomeSteam}</h1>
 
               {perfilPrivado && (
