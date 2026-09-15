@@ -212,28 +212,33 @@ const Tab3: React.FC = () => {
   }
 
 const abrirConquistas = async (jogo: any) => {
-    setJogoAtual(jogo)
-    
-    const responseUsuario = await fetch(getProxyUrl(`https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${steamId}&appid=${jogo.appid}&l=brazilian`))
-    const dataUsuario = await responseUsuario.json()
-    const conquistasUsuario = dataUsuario.playerstats.achievements
- 
-    const responseSchema = await fetch(getProxyUrl(`https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&appid=${jogo.appid}&l=brazilian`))
-    const dataSchema = await responseSchema.json()
-    const schemaConquistas = dataSchema.game.availableGameStats.achievements
+    setJogoAtual(jogo);
+    try {
+      const responseUsuario = await fetch(getProxyUrl(`https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${import.meta.env.VITE_STEAM_API_KEY}&steamid=${steamId}&appid=${jogo.appid}&l=brazilian`));
+      const dataUsuario = responseUsuario.ok ? await responseUsuario.json() : null;
+      const conquistasUsuario = dataUsuario?.playerstats?.achievements || [];
 
-    const conquistasCombinadas = conquistasUsuario.map((conquista: any) => {
-        const detalhes = schemaConquistas.find((s: any) => s.name === conquista.apiname)
+      const responseSchema = await fetch(getProxyUrl(`https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${import.meta.env.VITE_STEAM_API_KEY}&appid=${jogo.appid}&l=brazilian`));
+      const dataSchema = responseSchema.ok ? await responseSchema.json() : null;
+      const schemaConquistas = dataSchema?.game?.availableGameStats?.achievements || [];
+
+      const conquistasCombinadas = conquistasUsuario.map((conquista: any) => {
+        const detalhes = schemaConquistas.find((s: any) => s.name === conquista.apiname);
         return {
-            nome: detalhes?.displayName,
-            icone: conquista.achieved ? detalhes?.icon : detalhes?.icongray,
-            desbloqueada: conquista.achieved === 1
-        }
-    })
+          nome: detalhes?.displayName || conquista.apiname,
+          icone: conquista.achieved ? (detalhes?.icon || detalhes?.icongray) : (detalhes?.icongray || detalhes?.icon),
+          desbloqueada: conquista.achieved === 1
+        };
+      });
 
-    setListaConquistas(conquistasCombinadas)
-    setModalConquistas(true)
-}
+      setListaConquistas(conquistasCombinadas);
+      setModalConquistas(true);
+    } catch (error) {
+      console.error('Erro ao buscar conquistas:', error);
+      setListaConquistas([]);
+      setModalConquistas(true);
+    }
+};
   
   return (
     <IonPage>
@@ -358,18 +363,23 @@ const abrirConquistas = async (jogo: any) => {
 
       <IonContent>
         <h2 style={{padding: '16px'}}>Conquistas</h2>
-        {listaConquistas.map((conquista, index) => (
-          <div key={index} style={{display: 'flex', alignItems: 'center', padding: '8px 16px', gap: '12px'}}>
-            <img src={conquista.icone} style={{width: '48px', height: '48px'}} />
-            <p style={{
-              margin: 0,
-              color: conquista.desbloqueada ? 'white' : 'gray'
-            }}>
-              {conquista.nome}
-            </p>
-          </div>
-        ))}
-
+        {listaConquistas.length > 0 ? (
+          listaConquistas.map((conquista, index) => (
+            <div key={index} style={{display: 'flex', alignItems: 'center', padding: '8px 16px', gap: '12px'}}>
+              <img src={conquista.icone} style={{width: '48px', height: '48px'}} alt={conquista.nome} />
+              <p style={{
+                margin: 0,
+                color: conquista.desbloqueada ? 'white' : 'gray'
+              }}>
+                {conquista.nome}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p style={{ padding: '24px 16px', color: '#cfd4da', textAlign: 'center' }}>
+            Este jogo não possui conquistas registradas na Steam.
+          </p>
+        )}
       </IonContent>
       </IonModal>
       </IonContent>

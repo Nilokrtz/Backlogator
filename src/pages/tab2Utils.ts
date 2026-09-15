@@ -6,15 +6,35 @@ export interface JogoPesquisa {
   shortDescription?: string;
 }
 
+const GENRE_MAP: Record<string, string[]> = {
+  todos: [],
+  rpg: ['rpg', 'role-playing'],
+  action: ['ação', 'acao', 'action', 'fps', 'tiro'],
+  fps: ['fps', 'tiro', 'ação', 'acao', 'action', 'primeira pessoa', 'first-person shooter'],
+  adventure: ['aventura', 'adventure'],
+  indie: ['indie'],
+  simulation: ['simulação', 'simulacao', 'simulation', 'simulador'],
+  strategy: ['estratégia', 'estrategia', 'strategy'],
+  moba: ['moba', 'estratégia', 'estrategia', 'ação', 'acao']
+};
+
 export function filterJogos(jogos: JogoPesquisa[], query: string, genero: string) {
   const termo = query.trim().toLowerCase();
-  const generoSelecionado = genero.toLowerCase();
+  const generoKey = genero.trim().toLowerCase();
 
   return jogos.filter((jogo) => {
     const nomeOk = !termo || jogo.name.toLowerCase().includes(termo);
-    const generoOk = generoSelecionado === 'todos' ||
-      (jogo.genres ?? []).some((genre) => genre.toLowerCase() === generoSelecionado);
+    if (generoKey === 'todos') return nomeOk;
 
-    return nomeOk && generoOk;
+    const synonyms = GENRE_MAP[generoKey] || [generoKey];
+    const jogoGenres = (jogo.genres ?? []).map((g) => g.toLowerCase());
+
+    const generoOk = synonyms.some((syn) =>
+      jogoGenres.some((g) => g.includes(syn) || syn.includes(g)) ||
+      (jogo.shortDescription && jogo.shortDescription.toLowerCase().includes(syn)) ||
+      jogo.name.toLowerCase().includes(syn)
+    );
+
+    return nomeOk && (generoOk || !jogo.genres || jogo.genres.length === 0);
   });
 }

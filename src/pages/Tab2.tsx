@@ -44,18 +44,15 @@ const Tab2: React.FC = () => {
 
   useEffect(() => {
     const termo = query.trim();
-    if (!termo) {
-      setJogosSteam([]);
-      setLoading(false);
-      return;
-    }
+    const termoBusca = termo || (generoSelecionado !== 'Todos' ? generoSelecionado : '');
+    const urlBusca = termoBusca 
+      ? `https://store.steampowered.com/search/?term=${encodeURIComponent(termoBusca)}`
+      : `https://store.steampowered.com/search/?ndl=1`;
 
     const buscarJogosSteam = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          getProxyUrl(`https://store.steampowered.com/search/?term=${encodeURIComponent(termo)}&supportedlang=brazilian&ndl=1`)
-        );
+        const response = await fetch(getProxyUrl(urlBusca));
         const html = await response.text();
 
         const regex = /data-ds-appid="(\d+)"[^>]*>.*?<span class="title">([^<]+)<\/span>/gs;
@@ -100,9 +97,9 @@ const Tab2: React.FC = () => {
       }
     };
 
-    const timeout = window.setTimeout(buscarJogosSteam, 400);
+    const timeout = window.setTimeout(buscarJogosSteam, 300);
     return () => window.clearTimeout(timeout);
-  }, [query]);
+  }, [query, generoSelecionado]);
 
   const jogosFiltrados = useMemo(() => filterJogos(jogosSteam, query, generoSelecionado), [jogosSteam, query, generoSelecionado]);
 
