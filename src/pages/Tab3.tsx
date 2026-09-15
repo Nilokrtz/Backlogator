@@ -320,7 +320,7 @@ const abrirConquistas = async (jogo: any) => {
             {jogos.map((jogo) => (
               <SwiperSlide 
               key={jogo.appid}
-              onClick={() => history.push(`/game/${jogo.appid}`)}
+              onClick={() => abrirConquistas(jogo)}
               style={{ cursor: 'pointer' }}
               >
                 <img 

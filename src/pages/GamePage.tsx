@@ -49,14 +49,9 @@ const GamePage: React.FC = () => {
     const buscarDados = async () => {
       try {
         const response = await fetch(getProxyUrl(`https://store.steampowered.com/api/appdetails?appids=${appid}&l=brazilian`));
-        if (!response.ok) {
-          throw new Error('Não foi possível conectar ao servidor da Steam.');
-        }
         const data = await response.json();
-        if (!data || !data[appid] || !data[appid].success) {
-          throw new Error('Este jogo não foi encontrado ou não está disponível na Steam.');
-        }
-        const gameData = data[appid].data;
+        const gameData = data?.[appid]?.data;
+        if (!gameData) return;
 
         setNomeJogo(gameData.name || '');
         setDescricaoCurta(gameData.short_description || '');
@@ -68,16 +63,12 @@ const GamePage: React.FC = () => {
         setDataLancamento(gameData.release_date?.date || '');
         setDesenvolvedores(gameData.developers || []);
         setPublicadoras(gameData.publishers || []);
-      } catch (error: any) {
-        console.error('Erro ao buscar detalhes do jogo:', error);
-        history.push('/error', {
-          title: 'Erro de Conexão',
-          message: error.message || 'Ocorreu um problema ao obter as informações do jogo na Steam.'
-        });
+      } catch (error) {
+        console.error('Erro ao buscar dados do jogo:', error);
       }
     };
     buscarDados();
-  }, [appid, history]);
+  }, [appid]);
 
   return (
     <IonPage>

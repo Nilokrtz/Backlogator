@@ -25,7 +25,6 @@ import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import GamePage from './pages/GamePage';
 import ErrorBoundary from './components/ErrorBoundary';
-import ErrorPage from './components/ErrorPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -91,14 +90,6 @@ const App: React.FC = () => (
             <Route exact path="/game/:appid">
               <GamePage />
             </Route>
-
-            <Route exact path="/404">
-              <ErrorPage type="404" />
-            </Route>
-
-            <Route exact path="/error">
-              <ErrorPage type="generic" />
-            </Route>
             
             <Route path="/tabs">
               <IonTabs>
@@ -111,11 +102,6 @@ const App: React.FC = () => (
                   {/* padrão das tabs */}
                   <Route exact path="/tabs">
                     <Redirect to="/tabs/tab1" />
-                  </Route>
-
-                  {/* Catch-all for tabs subpaths, redirect to general 404 */}
-                  <Route>
-                    <Redirect to="/404" />
                   </Route>
                 </IonRouterOutlet>
 
@@ -137,11 +123,6 @@ const App: React.FC = () => (
                 </IonTabBar>
 
               </IonTabs>
-            </Route>
-
-            {/* Catch-all route to redirect unmatched paths to 404 */}
-            <Route>
-              <Redirect to="/404" />
             </Route>
 
           </IonRouterOutlet>
